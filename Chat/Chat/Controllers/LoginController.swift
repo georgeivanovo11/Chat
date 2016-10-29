@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class LoginController: UIViewController
 {
@@ -113,6 +114,34 @@ extension LoginController
     {
         self.navigationController?.pushViewController(PersonController(), animated: true)
         
+        guard let tempEmail = emailTextField.text, let tempPassword = passwordTextField.text, let tempName = nameTextField.text
+        else
+        {
+            print("error1: no text in field")
+            return
+        }
+        
+        FIRAuth.auth()?.createUser(withEmail: tempEmail, password: tempPassword, completion:
+        {
+            (user: FIRUser?, error) in
+            
+            if error != nil
+            {
+                print("error2: no connection")
+                return
+            }
+            
+            guard let uid = user?.uid
+            else
+            {
+                return
+            }
+            
+            //successfully auth
+            let ref = FIRDatabase.database().reference(fromURL: "https://chat-6a19a.firebaseio.com/")
+            let usersRef = ref.child("users").child(uid)
+            usersRef.updateChildValues(["name": tempName, "email": tempEmail])
+        })
     }
 }
 
