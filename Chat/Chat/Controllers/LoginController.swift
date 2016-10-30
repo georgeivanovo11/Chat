@@ -33,7 +33,7 @@ class LoginController: UIViewController
             button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
             
             //Actions:
-            button.addTarget(self, action: #selector(toCheckIn), for: .touchUpInside)
+            button.addTarget(self, action: #selector(toPressButton), for: .touchUpInside)
         
             return button
     } ()
@@ -128,38 +128,67 @@ class LoginController: UIViewController
 // MARK:- Actions of elements
 extension LoginController
 {
-    func toCheckIn()
+    func toPressButton()
     {
-        self.navigationController?.pushViewController(PersonController(), animated: true)
-        
-        guard let tempEmail = emailTextField.text, let tempPassword = passwordTextField.text, let tempName = nameTextField.text
+        if segmentedControl.selectedSegmentIndex == 0
+        {
+            toLogIn()
+        }
+        else
+        {
+            toCheckin()
+        }
+    }
+    
+    func toLogIn()
+    {
+        guard let tempEmail = emailTextField.text, let tempPassword = passwordTextField.text
         else
         {
             print("error1: no text in field")
             return
         }
         
-        FIRAuth.auth()?.createUser(withEmail: tempEmail, password: tempPassword, completion:
+        FIRAuth.auth()?.signIn(withEmail: tempEmail, password: tempPassword, completion: nil)
+        
+        if FIRAuth.auth()?.currentUser?.uid == nil
         {
-            (user: FIRUser?, error) in
-            
-            if error != nil
-            {
-                print("error2: no connection")
-                return
-            }
-            
-            guard let uid = user?.uid
-            else
-            {
-                return
-            }
-            
+            print("error2: no such user in database")
+        }
+        else
+        {
             //successfully auth
+            self.navigationController?.pushViewController(PersonController(), animated: true)
+        }
+    }
+    
+    func toCheckin()
+    {
+        guard let tempEmail = emailTextField.text, let tempPassword = passwordTextField.text, let tempName = nameTextField.text
+            else
+        {
+            print("error1: no text in field")
+            return
+        }
+        
+        FIRAuth.auth()?.createUser(withEmail: tempEmail, password: tempPassword, completion: nil)
+        
+        if FIRAuth.auth()?.currentUser?.uid == nil
+        {
+            print("error2: no such user in database")
+        }
+        else
+        {
+            //successfully auth
+            let uid = FIRAuth.auth()?.currentUser?.uid
+            
             let ref = FIRDatabase.database().reference(fromURL: "https://chat-6a19a.firebaseio.com/")
-            let usersRef = ref.child("users").child(uid)
+            let usersRef = ref.child("users").child(uid!)
             usersRef.updateChildValues(["name": tempName, "email": tempEmail])
-        })
+            
+            self.navigationController?.pushViewController(PersonController(), animated: true)
+        }
+
     }
     
     func toChangeType()
