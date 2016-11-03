@@ -20,6 +20,7 @@ class DialogsController: UITableViewController
         view.backgroundColor = UIColor(255,255,255)
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New", style: .plain, target: self, action: #selector(handleNewDialog))
         
         downloadInfo()
     }
@@ -64,5 +65,10 @@ extension DialogsController
         }
         
         self.navigationController?.pushViewController(LoginController(), animated: true)
+    }
+    
+    func handleNewDialog()
+    {
+        self.navigationController?.pushViewController(PeopleController(), animated: true)
     }
 }

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0C9BD95E1EB66BCEEF1D78CE /* Pods_Chat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA43A6D67A64877E417437E /* Pods_Chat.framework */; };
+		5E6A09751DCBD0E3008019A5 /* PeopleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E6A09741DCBD0E3008019A5 /* PeopleController.swift */; };
 		5EA40C581DC3DFDC0034D03A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA40C571DC3DFDC0034D03A /* AppDelegate.swift */; };
 		5EA40C5F1DC3DFDC0034D03A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EA40C5E1DC3DFDC0034D03A /* Assets.xcassets */; };
 		5EA40C6A1DC3E08A0034D03A /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA40C691DC3E08A0034D03A /* LoginController.swift */; };
@@ -18,6 +19,7 @@
 /* Begin PBXFileReference section */
 		1CCC78C3AF378A19870C26B1 /* Pods-Chat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Chat/Pods-Chat.debug.xcconfig"; sourceTree = "<group>"; };
 		5DD12BBDADE017340AE00D1E /* Pods-Chat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chat.release.xcconfig"; path = "Pods/Target Support Files/Pods-Chat/Pods-Chat.release.xcconfig"; sourceTree = "<group>"; };
+		5E6A09741DCBD0E3008019A5 /* PeopleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PeopleController.swift; path = Controllers/PeopleController.swift; sourceTree = "<group>"; };
 		5EA40C541DC3DFDC0034D03A /* Chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EA40C571DC3DFDC0034D03A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5EA40C5E1DC3DFDC0034D03A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 			children = (
 				5EA40C691DC3E08A0034D03A /* LoginController.swift */,
 				5EA40C6C1DC3E32F0034D03A /* DialogsController.swift */,
+				5E6A09741DCBD0E3008019A5 /* PeopleController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -220,6 +223,7 @@
 			files = (
 				5EA40C581DC3DFDC0034D03A /* AppDelegate.swift in Sources */,
 				5EA40C6D1DC3E32F0034D03A /* DialogsController.swift in Sources */,
+				5E6A09751DCBD0E3008019A5 /* PeopleController.swift in Sources */,
 				5EA40C6A1DC3E08A0034D03A /* LoginController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
