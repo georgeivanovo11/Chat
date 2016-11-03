@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0C9BD95E1EB66BCEEF1D78CE /* Pods_Chat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA43A6D67A64877E417437E /* Pods_Chat.framework */; };
 		5E6A09751DCBD0E3008019A5 /* PeopleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E6A09741DCBD0E3008019A5 /* PeopleController.swift */; };
+		5E6A09771DCBD75E008019A5 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E6A09761DCBD75E008019A5 /* User.swift */; };
 		5EA40C581DC3DFDC0034D03A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA40C571DC3DFDC0034D03A /* AppDelegate.swift */; };
 		5EA40C5F1DC3DFDC0034D03A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EA40C5E1DC3DFDC0034D03A /* Assets.xcassets */; };
 		5EA40C6A1DC3E08A0034D03A /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA40C691DC3E08A0034D03A /* LoginController.swift */; };
@@ -20,6 +21,8 @@
 		1CCC78C3AF378A19870C26B1 /* Pods-Chat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Chat/Pods-Chat.debug.xcconfig"; sourceTree = "<group>"; };
 		5DD12BBDADE017340AE00D1E /* Pods-Chat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chat.release.xcconfig"; path = "Pods/Target Support Files/Pods-Chat/Pods-Chat.release.xcconfig"; sourceTree = "<group>"; };
 		5E6A09741DCBD0E3008019A5 /* PeopleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PeopleController.swift; path = Controllers/PeopleController.swift; sourceTree = "<group>"; };
+		5E6A09761DCBD75E008019A5 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Modal/User.swift; sourceTree = "<group>"; };
+		5E6A09791DCBDEC7008019A5 /* Chat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Chat.entitlements; sourceTree = "<group>"; };
 		5EA40C541DC3DFDC0034D03A /* Chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EA40C571DC3DFDC0034D03A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5EA40C5E1DC3DFDC0034D03A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -42,6 +45,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5E6A09781DCBD764008019A5 /* Modal */ = {
+			isa = PBXGroup;
+			children = (
+				5E6A09761DCBD75E008019A5 /* User.swift */,
+			);
+			name = Modal;
+			sourceTree = "<group>";
+		};
 		5EA40C4B1DC3DFDC0034D03A = {
 			isa = PBXGroup;
 			children = (
@@ -63,6 +74,8 @@
 		5EA40C561DC3DFDC0034D03A /* Chat */ = {
 			isa = PBXGroup;
 			children = (
+				5E6A09791DCBDEC7008019A5 /* Chat.entitlements */,
+				5E6A09781DCBD764008019A5 /* Modal */,
 				5EA40C6B1DC3E08D0034D03A /* Controllers */,
 				5EA40C571DC3DFDC0034D03A /* AppDelegate.swift */,
 				5EA40C5E1DC3DFDC0034D03A /* Assets.xcassets */,
@@ -134,7 +147,13 @@
 				TargetAttributes = {
 					5EA40C531DC3DFDC0034D03A = {
 						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = 69C4K6EG3B;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -224,6 +243,7 @@
 				5EA40C581DC3DFDC0034D03A /* AppDelegate.swift in Sources */,
 				5EA40C6D1DC3E32F0034D03A /* DialogsController.swift in Sources */,
 				5E6A09751DCBD0E3008019A5 /* PeopleController.swift in Sources */,
+				5E6A09771DCBD75E008019A5 /* User.swift in Sources */,
 				5EA40C6A1DC3E08A0034D03A /* LoginController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -327,6 +347,8 @@
 			baseConfigurationReference = 1CCC78C3AF378A19870C26B1 /* Pods-Chat.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Chat/Chat.entitlements;
+				DEVELOPMENT_TEAM = 69C4K6EG3B;
 				INFOPLIST_FILE = Chat/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -341,6 +363,8 @@
 			baseConfigurationReference = 5DD12BBDADE017340AE00D1E /* Pods-Chat.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Chat/Chat.entitlements;
+				DEVELOPMENT_TEAM = 69C4K6EG3B;
 				INFOPLIST_FILE = Chat/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

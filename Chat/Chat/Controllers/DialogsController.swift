@@ -36,10 +36,10 @@ class DialogsController: UITableViewController
             // Write name of the User in the Bar
             let setTitle: ((FIRDataSnapshot) -> Void) =
             {
-                (snapshop) in
+                (snapshot) in
                 
-                let dictionary = snapshop.value as? [String: AnyObject]
-                self.navigationItem.title = dictionary?["name"] as? String
+                if let dictionary = snapshot.value as? [String: AnyObject]
+                { self.navigationItem.title = dictionary["name"] as? String }
             }
             
             let uid = FIRAuth.auth()?.currentUser?.uid
