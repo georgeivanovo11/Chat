@@ -11,7 +11,7 @@
 		5EA40C581DC3DFDC0034D03A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA40C571DC3DFDC0034D03A /* AppDelegate.swift */; };
 		5EA40C5F1DC3DFDC0034D03A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EA40C5E1DC3DFDC0034D03A /* Assets.xcassets */; };
 		5EA40C6A1DC3E08A0034D03A /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA40C691DC3E08A0034D03A /* LoginController.swift */; };
-		5EA40C6D1DC3E32F0034D03A /* PersonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA40C6C1DC3E32F0034D03A /* PersonController.swift */; };
+		5EA40C6D1DC3E32F0034D03A /* DialogsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA40C6C1DC3E32F0034D03A /* DialogsController.swift */; };
 		5EF9A0D11DC4E1780043CA1B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5EF9A0D01DC4E1780043CA1B /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -23,7 +23,7 @@
 		5EA40C5E1DC3DFDC0034D03A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5EA40C631DC3DFDC0034D03A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5EA40C691DC3E08A0034D03A /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginController.swift; path = Controllers/LoginController.swift; sourceTree = "<group>"; };
-		5EA40C6C1DC3E32F0034D03A /* PersonController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PersonController.swift; path = Controllers/PersonController.swift; sourceTree = "<group>"; };
+		5EA40C6C1DC3E32F0034D03A /* DialogsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DialogsController.swift; path = Controllers/DialogsController.swift; sourceTree = "<group>"; };
 		5EF9A0D01DC4E1780043CA1B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8BA43A6D67A64877E417437E /* Pods_Chat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Chat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -74,7 +74,7 @@
 			isa = PBXGroup;
 			children = (
 				5EA40C691DC3E08A0034D03A /* LoginController.swift */,
-				5EA40C6C1DC3E32F0034D03A /* PersonController.swift */,
+				5EA40C6C1DC3E32F0034D03A /* DialogsController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -219,7 +219,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5EA40C581DC3DFDC0034D03A /* AppDelegate.swift in Sources */,
-				5EA40C6D1DC3E32F0034D03A /* PersonController.swift in Sources */,
+				5EA40C6D1DC3E32F0034D03A /* DialogsController.swift in Sources */,
 				5EA40C6A1DC3E08A0034D03A /* LoginController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

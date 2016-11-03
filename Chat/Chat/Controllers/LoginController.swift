@@ -158,7 +158,7 @@ extension LoginController
         else
         {
             //successfully auth
-            self.navigationController?.pushViewController(PersonController(), animated: true)
+            self.navigationController?.pushViewController(DialogsController(), animated: true)
         }
     }
     
@@ -186,7 +186,7 @@ extension LoginController
             let usersRef = ref.child("users").child(uid!)
             usersRef.updateChildValues(["name": tempName, "email": tempEmail])
             
-            self.navigationController?.pushViewController(PersonController(), animated: true)
+            self.navigationController?.pushViewController(DialogsController(), animated: true)
         }
 
     }
