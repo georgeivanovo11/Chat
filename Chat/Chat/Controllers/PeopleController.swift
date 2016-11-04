@@ -39,6 +39,7 @@ class PeopleController: UITableViewController
                 let tempUser = User()
                 tempUser.name = dictionary["name"] as! String?
                 tempUser.email = dictionary["email"] as! String?
+                tempUser.imageURL = dictionary ["imageURL"] as! String?
                 self.users.append(tempUser)
             }
             DispatchQueue.main.async(execute: {self.tableView.reloadData()})

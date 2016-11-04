@@ -180,16 +180,34 @@ extension LoginController
         
         if FIRAuth.auth()?.currentUser?.uid == nil
         {
-            print("error2: no such user in database")
+            print("error2: wrong input data")
         }
         else
         {
             //successfully auth
-            let uid = FIRAuth.auth()?.currentUser?.uid
+            let imageName = NSUUID().uuidString
+            let uploadData = UIImagePNGRepresentation(self.profileImageView.image!)
+            let storageRef = FIRStorage.storage().reference().child("ImagesOfUsers").child("\(imageName).png")
             
-            let ref = FIRDatabase.database().reference(fromURL: "https://chat-6a19a.firebaseio.com/")
-            let usersRef = ref.child("users").child(uid!)
-            usersRef.updateChildValues(["name": tempName, "email": tempEmail])
+            let registerUser: ((FIRStorageMetadata?,Error?) -> Void) =
+            {
+                (metadata, error) in
+                
+                if error != nil
+                {
+                    print("error3: problems with server")
+                    return
+                }
+                
+                let imageURL = (metadata?.downloadURL()?.absoluteString)!
+                let uid = FIRAuth.auth()?.currentUser?.uid
+                let ref = FIRDatabase.database().reference(fromURL: "https://chat-6a19a.firebaseio.com/")
+                let usersRef = ref.child("users").child(uid!)
+                
+                usersRef.updateChildValues(["name": tempName, "email": tempEmail, "imageURL": imageURL])
+                
+            }
+            storageRef.put(uploadData!, metadata: nil, completion: registerUser)
             
             self.navigationController?.pushViewController(DialogsController(), animated: true)
         }
