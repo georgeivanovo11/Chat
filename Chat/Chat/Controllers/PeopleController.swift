@@ -21,10 +21,14 @@ class PeopleController: UITableViewController
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
         
-        fetchUser()
+        tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
+        
+        self.navigationItem.title = "People"
+        downloadListOfUsers()
+        
     }
     
-    func fetchUser()
+    func downloadListOfUsers()
     {
         let getUsers: ((FIRDataSnapshot) -> Void) =
         {
@@ -35,17 +39,12 @@ class PeopleController: UITableViewController
                 let tempUser = User()
                 tempUser.name = dictionary["name"] as! String?
                 tempUser.email = dictionary["email"] as! String?
-                print(tempUser.name! + "\n")
                 self.users.append(tempUser)
             }
-            
-            DispatchQueue.main.async
-            {
-                self.tableView.reloadData()
-            }
+            DispatchQueue.main.async(execute: {self.tableView.reloadData()})
         }
         
-        FIRDatabase.database().reference().child("Users").observeSingleEvent(of: .childAdded, with: getUsers, withCancel: nil)
+        FIRDatabase.database().reference().child("users").observe(.childAdded, with: getUsers)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
@@ -55,10 +54,13 @@ class PeopleController: UITableViewController
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellId)
+        //let cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellId)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         
         let tempUser = users[indexPath.row]
         cell.textLabel?.text = tempUser.name
+        cell.detailTextLabel?.text = tempUser.email
+        
         return cell
     }
     
@@ -71,3 +73,17 @@ extension PeopleController
         self.navigationController?.pushViewController(DialogsController(), animated: true)
     }
 }
+
+class UserCell: UITableViewCell
+{
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?)
+    {
+        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
