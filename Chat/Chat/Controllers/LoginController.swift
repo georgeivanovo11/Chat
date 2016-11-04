@@ -79,12 +79,16 @@ class LoginController: UIViewController
             return text
     }()
 
-    let profileImageView: UIImageView =
+    lazy var profileImageView: UIImageView =
     {
             let imageView = UIImageView()
             imageView.image = UIImage(named: "logo")
             imageView.translatesAutoresizingMaskIntoConstraints = false
             imageView.contentMode = .scaleToFill
+        
+        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(chooseImage)))
+        imageView.isUserInteractionEnabled = true
+        
             return imageView
     }()
     
@@ -102,6 +106,7 @@ class LoginController: UIViewController
     var nameTextFieldHeightAnchor: NSLayoutConstraint?
     var emailTextFieldHeightAnchor: NSLayoutConstraint?
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
+    var profileImageViewWidthAnchor: NSLayoutConstraint?
     
     override func viewDidLoad()
     {
@@ -208,6 +213,13 @@ extension LoginController
             nameTextFieldHeightAnchor?.isActive = true
             emailTextFieldHeightAnchor?.isActive = true
             passwordTextFieldHeightAnchor?.isActive = true
+            
+            
+            profileImageView.isUserInteractionEnabled = false
+            profileImageView.image = UIImage(named: "logo")
+            profileImageViewWidthAnchor?.isActive = false
+            profileImageViewWidthAnchor = profileImageView.widthAnchor.constraint(equalToConstant: 250)
+            profileImageViewWidthAnchor?.isActive = true
         }
         else
         {
@@ -224,7 +236,44 @@ extension LoginController
             nameTextFieldHeightAnchor?.isActive = true
             emailTextFieldHeightAnchor?.isActive = true
             passwordTextFieldHeightAnchor?.isActive = true
+            
+            
+            profileImageView.isUserInteractionEnabled = true
+
         }
+    }
+}
+
+// MARK:- PickerController
+extension LoginController: UIImagePickerControllerDelegate, UINavigationControllerDelegate
+{
+    func chooseImage()
+    {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.allowsEditing = true
+        present(picker, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
+    {
+        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage
+        {
+            profileImageViewWidthAnchor?.isActive = false
+            profileImageViewWidthAnchor = profileImageView.widthAnchor.constraint(equalToConstant: 159)
+            profileImageViewWidthAnchor?.isActive = true
+            profileImageView.layer.cornerRadius = 10
+            profileImageView.layer.masksToBounds = true
+
+            profileImageView.image = editedImage
+        }
+
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController)
+    {
+        dismiss(animated: true, completion: nil)
     }
 }
 
@@ -306,7 +355,8 @@ extension LoginController
     {
         profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         profileImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 35).isActive = true
-        profileImageView.widthAnchor.constraint(equalToConstant: 250).isActive = true
+        profileImageViewWidthAnchor = profileImageView.widthAnchor.constraint(equalToConstant: 250)
+        profileImageViewWidthAnchor?.isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 159).isActive = true
     }
     
