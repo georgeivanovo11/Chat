@@ -61,6 +61,28 @@ class PeopleController: UITableViewController
         let tempUser = users[indexPath.row]
         cell.textLabel?.text = tempUser.name
         cell.detailTextLabel?.text = tempUser.email
+        cell.imageView?.image = UIImage(named: "UnknownUser")
+        
+        if let imageUrl = tempUser.imageURL
+        {
+            let url = NSURL(string: imageUrl)
+            let a = URLRequest(url: url as! URL)
+            URLSession.shared.dataTask(with: a, completionHandler:
+            {
+               (data, response ,error) in
+                
+                if error != nil
+                {
+                    print(error)
+                    return
+                }
+                
+                DispatchQueue.main.async(execute: {cell.imageView?.image = UIImage(data: data!)})
+
+                
+                
+            }).resume()
+        }
         
         return cell
     }
