@@ -56,12 +56,12 @@ class PeopleController: UITableViewController
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         //let cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellId)
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
         
         let tempUser = users[indexPath.row]
         cell.textLabel?.text = tempUser.name
         cell.detailTextLabel?.text = tempUser.email
-        cell.imageView?.image = UIImage(named: "UnknownUser")
+
         
         if let imageUrl = tempUser.imageURL
         {
@@ -77,7 +77,7 @@ class PeopleController: UITableViewController
                     return
                 }
                 
-                DispatchQueue.main.async(execute: {cell.imageView?.image = UIImage(data: data!)})
+                DispatchQueue.main.async(execute: {cell.profileImageView.image = UIImage(data: data!)})
 
                 
                 
@@ -85,6 +85,11 @@ class PeopleController: UITableViewController
         }
         
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
+    {
+        return 56
     }
     
 }
@@ -99,9 +104,32 @@ extension PeopleController
 
 class UserCell: UITableViewCell
 {
+    override func layoutSubviews()
+    {
+        super.layoutSubviews()
+        textLabel?.frame = CGRect(origin: CGPoint(x:56,y: textLabel!.frame.origin.y - 1), size: CGSize(width: textLabel!.frame.width, height:textLabel!.frame.height))
+        detailTextLabel?.frame = CGRect(origin: CGPoint(x:56,y: detailTextLabel!.frame.origin.y + 1), size: CGSize(width: detailTextLabel!.frame.width, height: detailTextLabel!.frame.height))
+    }
+    
+    let profileImageView: UIImageView =
+    {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "UnknownUser")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 20
+        imageView.layer.masksToBounds = true
+        return imageView
+    }()
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?)
     {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+        addSubview(profileImageView)
+        profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
+        profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        profileImageView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
