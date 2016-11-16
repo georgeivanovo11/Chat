@@ -22,10 +22,14 @@ class DialogsController: UITableViewController
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New", style: .plain, target: self, action: #selector(handleNewDialog))
         
-        downloadInfo()
+        checkIsLoggedIn()
     }
     
-    func downloadInfo()
+}
+
+extension DialogsController
+{
+    func checkIsLoggedIn()
     {
         if FIRAuth.auth()?.currentUser?.uid == nil
         {
@@ -33,26 +37,33 @@ class DialogsController: UITableViewController
         }
         else
         {
-            // Write name of the User in the Bar
-            let setTitle: ((FIRDataSnapshot) -> Void) =
-            {
-                (snapshot) in
-                
-                if let dictionary = snapshot.value as? [String: AnyObject]
-                { self.navigationItem.title = dictionary["name"] as? String }
-            }
-            
-            let uid = FIRAuth.auth()?.currentUser?.uid
-            FIRDatabase.database().reference().child("users").child(uid!).observeSingleEvent(of: .value, with: setTitle, withCancel: nil)
-            
+            downloadInfo()
         }
-        
     }
-
-}
-
-extension DialogsController
-{
+    
+    func downloadInfo()
+    {
+        guard let uid = FIRAuth.auth()?.currentUser?.uid
+        else {return}
+        
+        FIRDatabase.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with:
+        {
+            (snapshot) in
+            
+            if let dictionary = snapshot.value as? [String: AnyObject]
+            {
+                let user = User()
+                user.setValuesForKeys(dictionary)
+                self.setupNavBarWithUser(user: user)
+            }
+        }, withCancel: nil)
+    }
+    
+    func setupNavBarWithUser(user: User)
+    {
+        self.navigationItem.title = user.name
+    }
+    
     func handleLogout()
     {
         do

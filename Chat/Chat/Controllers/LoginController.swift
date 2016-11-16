@@ -111,6 +111,7 @@ class LoginController: UIViewController
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        self.hideKeyboardWhenTappedAround()
         
         self.navigationController?.isNavigationBarHidden = true
         view.backgroundColor = UIColor(61,91,151)
@@ -154,17 +155,19 @@ extension LoginController
             return
         }
         
-        FIRAuth.auth()?.signIn(withEmail: tempEmail, password: tempPassword, completion: nil)
-        
-        if FIRAuth.auth()?.currentUser?.uid == nil
+        FIRAuth.auth()?.signIn(withEmail: tempEmail, password: tempPassword, completion:
         {
-            print("error2: no such user in database")
-        }
-        else
-        {
+            (user, error) in
+            
+            if error != nil
+            {
+                print("error2: no such user in database")
+                return
+            }
+            
             //successfully auth
             self.navigationController?.pushViewController(DialogsController(), animated: true)
-        }
+        })
     }
     
     func toCheckin()
@@ -176,42 +179,50 @@ extension LoginController
             return
         }
         
-        FIRAuth.auth()?.createUser(withEmail: tempEmail, password: tempPassword, completion: nil)
-        
-        if FIRAuth.auth()?.currentUser?.uid == nil
+        FIRAuth.auth()?.createUser(withEmail: tempEmail, password: tempPassword, completion:
         {
-            print("error2: wrong input data")
-        }
-        else
-        {
-            //successfully auth
+            (user: FIRUser?, error) in
+            
+            if error != nil
+            {
+                print(error)
+                return
+            }
+            
+            guard let uid = user?.uid
+            else
+            {
+                print("error2: wrong input data")
+                return
+            }
+            
+            //succsesfully auth
             let imageName = NSUUID().uuidString
-            let uploadData = UIImagePNGRepresentation(self.profileImageView.image!)
-            let storageRef = FIRStorage.storage().reference().child("ImagesOfUsers").child("\(imageName).png")
+            let uploadData = UIImageJPEGRepresentation(self.profileImageView.image!,0.1)
+            let storageRef = FIRStorage.storage().reference().child("ImagesOfUsers").child("\(imageName).jpg")
             
             let registerUser: ((FIRStorageMetadata?,Error?) -> Void) =
             {
-                (metadata, error) in
-                
-                if error != nil
-                {
-                    print("error3: problems with server")
-                    return
-                }
-                
-                let imageURL = (metadata?.downloadURL()?.absoluteString)!
-                let uid = FIRAuth.auth()?.currentUser?.uid
-                let ref = FIRDatabase.database().reference(fromURL: "https://chat-6a19a.firebaseio.com/")
-                let usersRef = ref.child("users").child(uid!)
-                
-                usersRef.updateChildValues(["name": tempName, "email": tempEmail, "imageURL": imageURL])
-                
+                    (metadata, error) in
+                    
+                    if error != nil
+                    {
+                        print("error3: problems with server")
+                        return
+                    }
+                    
+                    let imageURL = (metadata?.downloadURL()?.absoluteString)!
+                    let ref = FIRDatabase.database().reference(fromURL: "https://chat-6a19a.firebaseio.com/")
+                    let usersRef = ref.child("users").child(uid)
+                    
+                    usersRef.updateChildValues(["name": tempName, "email": tempEmail, "imageURL": imageURL])
+                    
             }
             storageRef.put(uploadData!, metadata: nil, completion: registerUser)
             
             self.navigationController?.pushViewController(DialogsController(), animated: true)
-        }
-
+            
+        })
     }
     
     func toChangeType()
@@ -395,5 +406,17 @@ extension UIColor
     }
 }
 
-
+extension UIViewController
+{
+    func hideKeyboardWhenTappedAround()
+    {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        view.addGestureRecognizer(tap)
+    }
+    
+    func dismissKeyboard()
+    {
+        view.endEditing(true)
+    }
+}
 
