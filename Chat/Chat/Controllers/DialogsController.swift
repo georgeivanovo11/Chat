@@ -80,6 +80,8 @@ extension DialogsController
     
     func handleNewDialog()
     {
-        self.navigationController?.pushViewController(PeopleController(), animated: true)
+        //self.navigationController?.pushViewController(PeopleController(), animated: true)
+        let chatController = ChatController(collectionViewLayout: UICollectionViewFlowLayout())
+        self.navigationController?.pushViewController(chatController, animated: true)
     }
 }
