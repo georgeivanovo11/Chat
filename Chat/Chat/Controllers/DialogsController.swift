@@ -53,6 +53,7 @@ extension DialogsController
             if let dictionary = snapshot.value as? [String: AnyObject]
             {
                 let user = User()
+                user.id = snapshot.key
                 user.setValuesForKeys(dictionary)
                 self.setupNavBarWithUser(user: user)
             }
@@ -80,8 +81,13 @@ extension DialogsController
     
     func handleNewDialog()
     {
-        //self.navigationController?.pushViewController(PeopleController(), animated: true)
+        self.navigationController?.pushViewController(PeopleController(), animated: true)
+    }
+    
+    func showChatForUser(user: User)
+    {
         let chatController = ChatController(collectionViewLayout: UICollectionViewFlowLayout())
+        chatController.user = user
         self.navigationController?.pushViewController(chatController, animated: true)
     }
 }

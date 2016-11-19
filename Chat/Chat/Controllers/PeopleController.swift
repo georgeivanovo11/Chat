@@ -37,6 +37,7 @@ class PeopleController: UITableViewController
             if let dictionary = snapshot.value as? [String: AnyObject]
             {
                 let tempUser = User()
+                tempUser.id = snapshot.key
                 tempUser.name = dictionary["name"] as! String?
                 tempUser.email = dictionary["email"] as! String?
                 tempUser.imageURL = dictionary ["imageURL"] as! String?
@@ -74,6 +75,15 @@ class PeopleController: UITableViewController
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
     {
         return 64
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
+        let user = self.users[indexPath.row]
+        let dc = DialogsController()
+        self.navigationController?.pushViewController(dc, animated: true)
+        dc.showChatForUser(user: user)
+        
     }
     
 }
