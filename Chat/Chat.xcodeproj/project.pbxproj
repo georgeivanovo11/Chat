@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0C9BD95E1EB66BCEEF1D78CE /* Pods_Chat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA43A6D67A64877E417437E /* Pods_Chat.framework */; };
+		5E23A2141DE24BAC0093243E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E23A2131DE24BAC0093243E /* Message.swift */; };
 		5E43B3DF1DD783AD00F26F17 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E43B3DE1DD783AD00F26F17 /* Extensions.swift */; };
 		5E545E481DE0763A00E9CFA5 /* ChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E545E471DE0763A00E9CFA5 /* ChatController.swift */; };
 		5E6A09751DCBD0E3008019A5 /* PeopleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E6A09741DCBD0E3008019A5 /* PeopleController.swift */; };
@@ -22,6 +23,7 @@
 /* Begin PBXFileReference section */
 		1CCC78C3AF378A19870C26B1 /* Pods-Chat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Chat/Pods-Chat.debug.xcconfig"; sourceTree = "<group>"; };
 		5DD12BBDADE017340AE00D1E /* Pods-Chat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chat.release.xcconfig"; path = "Pods/Target Support Files/Pods-Chat/Pods-Chat.release.xcconfig"; sourceTree = "<group>"; };
+		5E23A2131DE24BAC0093243E /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Message.swift; path = Modal/Message.swift; sourceTree = "<group>"; };
 		5E43B3DE1DD783AD00F26F17 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Extensions.swift; path = Helpers/Extensions.swift; sourceTree = "<group>"; };
 		5E545E471DE0763A00E9CFA5 /* ChatController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatController.swift; path = Controllers/ChatController.swift; sourceTree = "<group>"; };
 		5E6A09741DCBD0E3008019A5 /* PeopleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PeopleController.swift; path = Controllers/PeopleController.swift; sourceTree = "<group>"; };
@@ -61,6 +63,7 @@
 			isa = PBXGroup;
 			children = (
 				5E6A09761DCBD75E008019A5 /* User.swift */,
+				5E23A2131DE24BAC0093243E /* Message.swift */,
 			);
 			name = Modal;
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 				5E545E481DE0763A00E9CFA5 /* ChatController.swift in Sources */,
 				5EA40C6D1DC3E32F0034D03A /* DialogsController.swift in Sources */,
 				5E6A09751DCBD0E3008019A5 /* PeopleController.swift in Sources */,
+				5E23A2141DE24BAC0093243E /* Message.swift in Sources */,
 				5E6A09771DCBD75E008019A5 /* User.swift in Sources */,
 				5EA40C6A1DC3E08A0034D03A /* LoginController.swift in Sources */,
 			);

@@ -11,6 +11,7 @@ import Firebase
 
 class DialogsController: UITableViewController
 {
+    var messages = [Message]()
 
     override func viewDidLoad()
     {
@@ -23,6 +24,7 @@ class DialogsController: UITableViewController
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New", style: .plain, target: self, action: #selector(handleNewDialog))
         
         checkIsLoggedIn()
+        downloadMessages()
     }
     
 }
@@ -90,4 +92,48 @@ extension DialogsController
         chatController.user = user
         self.navigationController?.pushViewController(chatController, animated: true)
     }
+    
+    func downloadMessages()
+    {
+        let ref = FIRDatabase.database().reference().child("messages")
+        ref.observe(.childAdded, with:
+        {
+            (snapshot) in
+            
+            if let dictionary = snapshot.value as? [String: AnyObject]
+            {
+                let message = Message()
+                message.setValuesForKeys(dictionary)
+                self.messages.append(message)
+                
+                DispatchQueue.main.async(execute: {self.tableView.reloadData()})
+            }
+        })
+    }
 }
+
+//Table func
+extension DialogsController
+{
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
+        return messages.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cellId")
+        
+        let message = messages[indexPath.row]
+        cell.textLabel?.text = message.text
+        cell.detailTextLabel?.text = message.time
+        return cell
+    }
+    
+    
+}
+
+
+
+
+

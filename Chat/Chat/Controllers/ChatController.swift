@@ -43,24 +43,18 @@ extension ChatController
 {
     func handleSend()
     {
-        /*let ref = FIRDatabase.database().reference().child("messages")
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
+        
+        let ref = FIRDatabase.database().reference().child("messages")
         let childRef = ref.childByAutoId()
         let receiver = user!.id!
         let sender = FIRAuth.auth()!.currentUser!.uid
-        let time: = NSDate(timeIntervalSince1970: 6)
+        let time = dateFormatter.string(from: Date())
         let values = ["text": inputTextField.text!, "receiver": receiver, "sender": sender, "time": time]
         childRef.updateChildValues(values)
-        */
         
-        var a = Date()
-        var b :NSNumber = a.timeIntervalSince1970 as NSNumber
-        let c = b as Double
-        let d = Date(NSTimeIntervalSince1970: c as Double)
-        //let date: NSNumber = Int(Date())
-        //let calendar = NSCalendar.current
-        //let components = calendar.dataCom
-        print(b)
-        print(c)
+        //let newDate = dateFormatter.date(from: dateString)
     }
 }
 
