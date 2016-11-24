@@ -52,8 +52,21 @@ extension ChatController
         let sender = FIRAuth.auth()!.currentUser!.uid
         let time: String = dateFormatter.string(from: Date())
         let values = ["text": inputTextField.text!, "receiver": receiver, "sender": sender, "time": time]
-        childRef.updateChildValues(values)
+        //childRef.updateChildValues(values)
         
+        childRef.updateChildValues(values, withCompletionBlock:
+        {
+            (error, ref) in
+            if error != nil
+            {
+                print (error)
+                return
+            }
+            
+            let userMessagesRef = FIRDatabase.database().reference().child("user-messages").child(sender)
+            let messageRef = childRef.key
+            userMessagesRef.updateChildValues([messageRef: 1])             
+        })
         
     }
 }

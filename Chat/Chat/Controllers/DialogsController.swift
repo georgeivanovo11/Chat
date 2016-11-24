@@ -29,7 +29,7 @@ class DialogsController: UITableViewController
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         
-        downloadMessages()
+        downloadUserMessages()
     }
     
 }
@@ -98,39 +98,50 @@ extension DialogsController
         self.navigationController?.pushViewController(chatController, animated: true)
     }
     
-    func downloadMessages()
+    func downloadUserMessages()
     {
-        let ref = FIRDatabase.database().reference().child("messages")
+        guard let uid = FIRAuth.auth()?.currentUser?.uid
+        else {return}
+        let ref = FIRDatabase.database().reference().child("user-messages").child(uid)
         ref.observe(.childAdded, with:
         {
             (snapshot) in
             
-            if let dictionary = snapshot.value as? [String: AnyObject]
+            let messageId = snapshot.key
+            let messageRef = FIRDatabase.database().reference().child("messages").child(messageId)
+            
+            messageRef.observeSingleEvent(of: .value, with:
             {
-                let message = Message()
-                message.setValuesForKeys(dictionary)
+                (snapshot) in
                 
-                if let receiver  = message.receiver
+                if let dictionary = snapshot.value as? [String: AnyObject]
                 {
-                    self.messageDictionary[receiver] = message
-                    self.messages = Array (self.messageDictionary.values)
-                    self.messages.sort(by:
+                    let message = Message()
+                    message.setValuesForKeys(dictionary)
+                    
+                    if let receiver  = message.receiver
                     {
-                    (m1,m2)->Bool in
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
-                        
-                        let a = dateFormatter.date(from: m1.time!)!
-                        let b = dateFormatter.date(from: m2.time!)!
-                        
-                        return a > b
-                    })
+                        self.messageDictionary[receiver] = message
+                        self.messages = Array (self.messageDictionary.values)
+                        self.messages.sort(by:
+                            {
+                                (m1,m2)->Bool in
+                                let dateFormatter = DateFormatter()
+                                dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
+                                
+                                let a = dateFormatter.date(from: m1.time!)!
+                                let b = dateFormatter.date(from: m2.time!)!
+                                
+                                return a > b
+                        })
+                    }
+                    
+                    DispatchQueue.main.async(execute: {self.tableView.reloadData()})
                 }
-                
-                DispatchQueue.main.async(execute: {self.tableView.reloadData()})
-            }
+            })
         })
     }
+    
 }
 
 //Table func
