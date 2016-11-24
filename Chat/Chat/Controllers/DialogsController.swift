@@ -12,6 +12,7 @@ import Firebase
 class DialogsController: UITableViewController
 {
     var messages = [Message]()
+    var messageDictionary = [String: Message]()
     let cellId = "cellId"
 
     override func viewDidLoad()
@@ -108,7 +109,23 @@ extension DialogsController
             {
                 let message = Message()
                 message.setValuesForKeys(dictionary)
-                self.messages.append(message)
+                
+                if let receiver  = message.receiver
+                {
+                    self.messageDictionary[receiver] = message
+                    self.messages = Array (self.messageDictionary.values)
+                    self.messages.sort(by:
+                    {
+                    (m1,m2)->Bool in
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
+                        
+                        let a = dateFormatter.date(from: m1.time!)!
+                        let b = dateFormatter.date(from: m2.time!)!
+                        
+                        return a > b
+                    })
+                }
                 
                 DispatchQueue.main.async(execute: {self.tableView.reloadData()})
             }

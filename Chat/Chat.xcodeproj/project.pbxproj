@@ -18,6 +18,7 @@
 		5EA40C5F1DC3DFDC0034D03A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EA40C5E1DC3DFDC0034D03A /* Assets.xcassets */; };
 		5EA40C6A1DC3E08A0034D03A /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA40C691DC3E08A0034D03A /* LoginController.swift */; };
 		5EA40C6D1DC3E32F0034D03A /* DialogsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA40C6C1DC3E32F0034D03A /* DialogsController.swift */; };
+		5ED0B97A1DE76F47009F844C /* MyDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ED0B9791DE76F47009F844C /* MyDate.swift */; };
 		5EF9A0D11DC4E1780043CA1B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5EF9A0D01DC4E1780043CA1B /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +38,7 @@
 		5EA40C631DC3DFDC0034D03A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5EA40C691DC3E08A0034D03A /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginController.swift; path = Controllers/LoginController.swift; sourceTree = "<group>"; };
 		5EA40C6C1DC3E32F0034D03A /* DialogsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DialogsController.swift; path = Controllers/DialogsController.swift; sourceTree = "<group>"; };
+		5ED0B9791DE76F47009F844C /* MyDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyDate.swift; path = Helpers/MyDate.swift; sourceTree = "<group>"; };
 		5EF9A0D01DC4E1780043CA1B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8BA43A6D67A64877E417437E /* Pods_Chat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Chat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -65,6 +67,7 @@
 			isa = PBXGroup;
 			children = (
 				5E43B3DE1DD783AD00F26F17 /* Extensions.swift */,
+				5ED0B9791DE76F47009F844C /* MyDate.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -271,6 +274,7 @@
 				5EA40C581DC3DFDC0034D03A /* AppDelegate.swift in Sources */,
 				5E43B3DF1DD783AD00F26F17 /* Extensions.swift in Sources */,
 				5E545E481DE0763A00E9CFA5 /* ChatController.swift in Sources */,
+				5ED0B97A1DE76F47009F844C /* MyDate.swift in Sources */,
 				5EA40C6D1DC3E32F0034D03A /* DialogsController.swift in Sources */,
 				5E6A09751DCBD0E3008019A5 /* PeopleController.swift in Sources */,
 				5E3F96BF1DE717D000B64F0C /* UserCell.swift in Sources */,

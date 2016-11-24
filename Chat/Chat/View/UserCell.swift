@@ -40,12 +40,16 @@ class UserCell: UITableViewCell
         
         self.detailTextLabel?.text = message.text
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
-        let newDate = dateFormatter.date(from: message.time!)
-        dateFormatter.dateFormat = "HH:mm:ss"
-        let onlyTime = dateFormatter.string(from: newDate!)
-        self.timeLabel.text = onlyTime
+        let today = Date()
+        let thatDay = myDate.getDate(string: message.time!)
+        if myDate.compare(date1: today, date2: thatDay)
+        {
+            self.timeLabel.text = myDate.getTime(date: message.time!)
+        }
+        else
+        {
+            self.timeLabel.text = myDate.getDay(date: message.time!)
+        }
     }
     
     let profileImageView: UIImageView =
@@ -62,6 +66,9 @@ class UserCell: UITableViewCell
     let timeLabel: UILabel =
     {
         let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 15)
+        label.textColor = UIColor.gray
+        label.textAlignment = NSTextAlignment.right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -77,8 +84,8 @@ class UserCell: UITableViewCell
         profileImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
-        timeLabel.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
-        timeLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        timeLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10).isActive = true
+        timeLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
         timeLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
         timeLabel.heightAnchor.constraint(equalTo: (textLabel?.heightAnchor)!).isActive = true
         
