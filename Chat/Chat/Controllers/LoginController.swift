@@ -212,7 +212,7 @@ extension LoginController
                     }
                     
                     let imageURL = (metadata?.downloadURL()?.absoluteString)!
-                    let ref = FIRDatabase.database().reference(fromURL: "https://chat-6a19a.firebaseio.com/")
+                    let ref = FIRDatabase.database().reference()
                     let usersRef = ref.child("users").child(uid)
                     
                     usersRef.updateChildValues(["name": tempName, "email": tempEmail, "imageURL": imageURL])

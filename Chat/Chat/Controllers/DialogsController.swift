@@ -12,6 +12,7 @@ import Firebase
 class DialogsController: UITableViewController
 {
     var messages = [Message]()
+    let cellId = "cellId"
 
     override func viewDidLoad()
     {
@@ -24,6 +25,9 @@ class DialogsController: UITableViewController
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New", style: .plain, target: self, action: #selector(handleNewDialog))
         
         checkIsLoggedIn()
+        
+        tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
+        
         downloadMessages()
     }
     
@@ -115,6 +119,11 @@ extension DialogsController
 //Table func
 extension DialogsController
 {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
+    {
+        return 64
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         return messages.count
@@ -122,11 +131,10 @@ extension DialogsController
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cellId")
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
         let message = messages[indexPath.row]
-        cell.textLabel?.text = message.text
-        cell.detailTextLabel?.text = message.time
+        cell.showUserMessage(message: message)
+        
         return cell
     }
     

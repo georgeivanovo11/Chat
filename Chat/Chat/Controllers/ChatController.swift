@@ -50,11 +50,11 @@ extension ChatController
         let childRef = ref.childByAutoId()
         let receiver = user!.id!
         let sender = FIRAuth.auth()!.currentUser!.uid
-        let time = dateFormatter.string(from: Date())
+        let time: String = dateFormatter.string(from: Date())
         let values = ["text": inputTextField.text!, "receiver": receiver, "sender": sender, "time": time]
         childRef.updateChildValues(values)
         
-        //let newDate = dateFormatter.date(from: dateString)
+        
     }
 }
 
