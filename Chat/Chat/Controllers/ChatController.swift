@@ -65,7 +65,11 @@ extension ChatController
             
             let userMessagesRef = FIRDatabase.database().reference().child("user-messages").child(sender)
             let messageRef = childRef.key
-            userMessagesRef.updateChildValues([messageRef: 1])             
+            userMessagesRef.updateChildValues([messageRef: 1])
+            
+            let receiverUserMessageRer = FIRDatabase.database().reference().child("user-messages").child(receiver)
+            receiverUserMessageRer.updateChildValues([messageRef: 1])
+            
         })
         
     }

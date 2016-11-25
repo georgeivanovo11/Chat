@@ -28,8 +28,6 @@ class DialogsController: UITableViewController
         checkIsLoggedIn()
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
-        
-        downloadUserMessages()
     }
     
 }
@@ -69,6 +67,12 @@ extension DialogsController
     
     func setupNavBarWithUser(user: User)
     {
+        messages.removeAll()
+        messageDictionary.removeAll()
+        tableView.reloadData()
+        
+        downloadUserMessages()
+        
         self.navigationItem.title = user.name
     }
     
@@ -119,8 +123,14 @@ extension DialogsController
                     let message = Message()
                     message.setValuesForKeys(dictionary)
                     
-                    if let receiver  = message.receiver
+                    if var receiver  = message.receiver
                     {
+                        //????
+                        if receiver == uid
+                        {
+                            receiver = message.sender!
+                        }
+                        //?????
                         self.messageDictionary[receiver] = message
                         self.messages = Array (self.messageDictionary.values)
                         self.messages.sort(by:

@@ -20,9 +20,21 @@ class UserCell: UITableViewCell
     
     func showUserMessage(message: Message)
     {
-        if let receiver = message.receiver
+        let chatPartnerId: String?
+        if message.sender == FIRAuth.auth()?.currentUser?.uid
         {
-            let ref = FIRDatabase.database().reference().child("users").child(receiver)
+            chatPartnerId = message.receiver
+            self.detailTextLabel?.text = "Me: " + message.text!
+        }
+        else
+        {
+            chatPartnerId = message.sender
+            self.detailTextLabel?.text = message.text
+        }
+        
+        if let id = chatPartnerId
+        {
+            let ref = FIRDatabase.database().reference().child("users").child(id)
             ref.observeSingleEvent(of: .value, with:
                 {
                     (snapshot) in
@@ -38,7 +50,7 @@ class UserCell: UITableViewCell
             })
         }
         
-        self.detailTextLabel?.text = message.text
+        
         
         let today = Date()
         let thatDay = myDate.getDate(string: message.time!)
