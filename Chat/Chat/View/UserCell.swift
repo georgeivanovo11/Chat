@@ -20,19 +20,16 @@ class UserCell: UITableViewCell
     
     func showUserMessage(message: Message)
     {
-        let chatPartnerId: String?
         if message.sender == FIRAuth.auth()?.currentUser?.uid
         {
-            chatPartnerId = message.receiver
             self.detailTextLabel?.text = "Me: " + message.text!
         }
         else
         {
-            chatPartnerId = message.sender
             self.detailTextLabel?.text = message.text
         }
         
-        if let id = chatPartnerId
+        if let id = message.partnerId()
         {
             let ref = FIRDatabase.database().reference().child("users").child(id)
             ref.observeSingleEvent(of: .value, with:

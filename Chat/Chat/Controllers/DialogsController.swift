@@ -28,6 +28,8 @@ class DialogsController: UITableViewController
         checkIsLoggedIn()
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
+        
+        downloadUserMessages()
     }
     
 }
@@ -176,7 +178,29 @@ extension DialogsController
         return cell
     }
     
-    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
+        let message = messages[indexPath.row]
+        guard let id = message.partnerId()
+        else
+        {
+            return
+        }
+        
+        let ref = FIRDatabase.database().reference().child("users").child(id)
+        ref.observeSingleEvent(of: .value, with:
+        {
+            (snapshot) in
+            guard let dictionary = snapshot.value as? [String: AnyObject]
+            else
+            {return}
+            
+            let tempUser = User()
+            tempUser.setValuesForKeys(dictionary)
+            tempUser.id = id
+            self.showChatForUser(user: tempUser)
+        })
+    }
 }
 
 
