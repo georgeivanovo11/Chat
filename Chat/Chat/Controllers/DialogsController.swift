@@ -14,7 +14,8 @@ class DialogsController: UITableViewController
     var messages = [Message]()
     var messageDictionary = [String: Message]()
     let cellId = "cellId"
-
+    var timer: Timer?
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -29,7 +30,6 @@ class DialogsController: UITableViewController
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         
-        downloadUserMessages()
     }
     
 }
@@ -141,13 +141,17 @@ extension DialogsController
                                 return a > b
                         })
                     }
-                    
-                    DispatchQueue.main.async(execute: {self.tableView.reloadData()})
+                    self.timer?.invalidate()
+                    self.timer = Timer.scheduledTimer (withTimeInterval: 0.5, repeats: false, block:
+                    {
+                        (Timer) in
+                        print("1")
+                        DispatchQueue.main.async(execute: {self.tableView.reloadData()})
+                    })
                 }
             })
         })
     }
-    
 }
 
 //Table func

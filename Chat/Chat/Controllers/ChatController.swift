@@ -109,9 +109,36 @@ extension ChatController
         let message = messages[indexPath.row]
         cell.textView.text = message.text
         
+        setupCell(cell: cell, message: message)
+        
         cell.bubbleWidthAnchor?.constant = estimateFrameForText(text: message.text!).width + 32
         
         return cell
+    }
+    
+    private func setupCell(cell: ChatMessageCell, message: Message)
+    {
+        if let profileImageUrl = self.user?.imageURL
+        {
+            cell.profileImageView.loadImageUsingCacheWithUrlString(urlString: profileImageUrl)
+        }
+        
+        if message.sender == FIRAuth.auth()?.currentUser?.uid
+        {
+            cell.bubbleView.backgroundColor = ChatMessageCell.currentUserColor
+            cell.textView.textColor = UIColor.white
+            cell.bubbleViewRightAnchor?.isActive = true
+            cell.bubbleViewLeftAnchor?.isActive = false
+            cell.profileImageView.isHidden = true
+        }
+        else
+        {
+            cell.bubbleView.backgroundColor = ChatMessageCell.partnerUserColor
+            cell.textView.textColor = UIColor.black
+            cell.bubbleViewRightAnchor?.isActive = false
+            cell.bubbleViewLeftAnchor?.isActive = true
+            cell.profileImageView.isHidden = false
+        }
     }
 }
 

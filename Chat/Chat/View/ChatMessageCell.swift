@@ -10,6 +10,9 @@ import UIKit
 
 class ChatMessageCell: UICollectionViewCell
 {
+    static let currentUserColor = UIColor(0, 137, 249)
+    static let partnerUserColor = UIColor(240, 240, 240)
+    
     let textView: UITextView =
     {
         let tv = UITextView()
@@ -24,23 +27,39 @@ class ChatMessageCell: UICollectionViewCell
     let bubbleView: UIView =
     {
         let view = UIView()
-        view.backgroundColor = UIColor(0, 137, 249)
+        view.backgroundColor = currentUserColor
         view.layer.cornerRadius = 16
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
+    let profileImageView: UIImageView =
+    {
+        let im = UIImageView()
+        im.image = UIImage(named: "logo")
+        im.layer.cornerRadius = 16
+        im.layer.masksToBounds = true
+        im.translatesAutoresizingMaskIntoConstraints = false
+        return im
+    }()
+    
     var bubbleWidthAnchor: NSLayoutConstraint?
+    var bubbleViewRightAnchor: NSLayoutConstraint?
+    var bubbleViewLeftAnchor: NSLayoutConstraint?
     
     override init(frame: CGRect)
     {
         super.init(frame: frame)
         addSubview(bubbleView)
         addSubview(textView)
+        addSubview(profileImageView)
         
         //position of bubbleView
-        bubbleView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8).isActive = true
+        bubbleViewRightAnchor = bubbleView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8)
+        bubbleViewRightAnchor?.isActive = true
+        bubbleViewLeftAnchor = bubbleView.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 8)
+        bubbleViewLeftAnchor?.isActive = false
         bubbleView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         bubbleView.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
         bubbleWidthAnchor = bubbleView.widthAnchor.constraint(equalToConstant: 200)
@@ -52,6 +71,12 @@ class ChatMessageCell: UICollectionViewCell
         textView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 8).isActive = true
         textView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         textView.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+        
+        //position of profileImageView
+        profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
+        profileImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        profileImageView.widthAnchor.constraint(equalToConstant: 32).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 32).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {
