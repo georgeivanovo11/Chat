@@ -125,15 +125,9 @@ extension DialogsController
                     let message = Message()
                     message.setValuesForKeys(dictionary)
                     
-                    if var receiver  = message.receiver
+                    if let chatPartnerId = message.partnerId()
                     {
-                        //????
-                        if receiver == uid
-                        {
-                            receiver = message.sender!
-                        }
-                        //?????
-                        self.messageDictionary[receiver] = message
+                        self.messageDictionary[chatPartnerId] = message
                         self.messages = Array (self.messageDictionary.values)
                         self.messages.sort(by:
                             {
