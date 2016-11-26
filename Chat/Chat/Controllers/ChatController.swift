@@ -13,6 +13,7 @@ class ChatController: UICollectionViewController, UITextFieldDelegate, UICollect
 {
     let cellId = "cellId"
     var messages = [Message]()
+    var containerViewBottomAnchor: NSLayoutConstraint?
     
     var user: User?
     {
@@ -41,6 +42,7 @@ class ChatController: UICollectionViewController, UITextFieldDelegate, UICollect
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
         setupInputArea()
+        setupKeyboard()
     }
     
     func downloadMessages()
@@ -194,7 +196,8 @@ extension ChatController
         containerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(containerView)
         containerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        containerViewBottomAnchor = containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        containerViewBottomAnchor?.isActive = true
         containerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         containerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
@@ -234,8 +237,45 @@ extension ChatController
     }
 }
 
-
-
+//Keyboard
+extension ChatController
+{
+    func setupKeyboard()
+    {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: .UIKeyboardWillHide, object: nil)
+        hideKeyboardWhenTappedAround()
+    }
+    
+    func keyboardWillShow(notification: NSNotification)
+    {
+        let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+        containerViewBottomAnchor?.constant = -keyboardSize!.height
+        
+        let keyboardDirection = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey]
+        UIView.animate(withDuration: keyboardDirection as! TimeInterval)
+        {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    func keyboardWillHide(notification: NSNotification)
+    {
+        containerViewBottomAnchor?.constant = 0
+        
+        let keyboardDirection = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey]
+        UIView.animate(withDuration: keyboardDirection as! TimeInterval)
+        {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool)
+    {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
+    }
+}
 
 
 
