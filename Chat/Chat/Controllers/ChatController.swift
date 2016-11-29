@@ -47,9 +47,9 @@ class ChatController: UICollectionViewController, UITextFieldDelegate, UICollect
     
     func downloadMessages()
     {
-        guard let uid = FIRAuth.auth()?.currentUser?.uid
+        guard let uid = FIRAuth.auth()?.currentUser?.uid, let tempReceiver = user?.id
             else {return}
-        let currentUserRer = FIRDatabase.database().reference().child("user-messages").child(uid)
+        let currentUserRer = FIRDatabase.database().reference().child("user-messages").child(uid).child(tempReceiver)
         currentUserRer.observe(.childAdded, with:
         {
             (snapshot) in
@@ -65,12 +65,8 @@ class ChatController: UICollectionViewController, UITextFieldDelegate, UICollect
                 
                 let message = Message()
                 message.setValuesForKeys(dictionary)
-                
-                if message.partnerId() == self.user?.id
-                {
-                    self.messages.append(message)
-                    DispatchQueue.main.async(execute: {self.collectionView?.reloadData()})
-                }
+                self.messages.append(message)
+                DispatchQueue.main.async(execute: {self.collectionView?.reloadData()})
             })
         })
     }
@@ -172,11 +168,11 @@ extension ChatController
             
             self.inputTextField.text = nil
             
-            let userMessagesRef = FIRDatabase.database().reference().child("user-messages").child(sender)
+            let userMessagesRef = FIRDatabase.database().reference().child("user-messages").child(sender).child(receiver)
             let messageRef = childRef.key
             userMessagesRef.updateChildValues([messageRef: 1])
             
-            let receiverUserMessageRer = FIRDatabase.database().reference().child("user-messages").child(receiver)
+            let receiverUserMessageRer = FIRDatabase.database().reference().child("user-messages").child(receiver).child(sender)
             receiverUserMessageRer.updateChildValues([messageRef: 1])
             
         })

@@ -113,10 +113,23 @@ extension DialogsController
         {
             (snapshot) in
             
-            let messageId = snapshot.key
-            let messageRef = FIRDatabase.database().reference().child("messages").child(messageId)
+            let userId = snapshot.key
+            let ref2 = FIRDatabase.database().reference().child("user-messages").child(uid).child(userId)
+            ref2.observe(.childAdded, with:
+            {
+                (snapshot) in
+                let messageId = snapshot.key
+                self.getMessageFromMessageId(messageId: messageId)
+            })
             
-            messageRef.observeSingleEvent(of: .value, with:
+        })
+    }
+    
+    private func getMessageFromMessageId(messageId: String)
+    {
+        let messageRef = FIRDatabase.database().reference().child("messages").child(messageId)
+        
+        messageRef.observeSingleEvent(of: .value, with:
             {
                 (snapshot) in
                 
@@ -128,29 +141,40 @@ extension DialogsController
                     if let chatPartnerId = message.partnerId()
                     {
                         self.messageDictionary[chatPartnerId] = message
-                        self.messages = Array (self.messageDictionary.values)
-                        self.messages.sort(by:
-                            {
-                                (m1,m2)->Bool in
-                                let dateFormatter = DateFormatter()
-                                dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
-                                
-                                let a = dateFormatter.date(from: m1.time!)!
-                                let b = dateFormatter.date(from: m2.time!)!
-                                
-                                return a > b
-                        })
                     }
-                    self.timer?.invalidate()
-                    self.timer = Timer.scheduledTimer (withTimeInterval: 0.5, repeats: false, block:
-                    {
-                        (Timer) in
-                        print("1")
-                        DispatchQueue.main.async(execute: {self.tableView.reloadData()})
-                    })
+                    
+                    self.attemptReloadOfTable()
                 }
-            })
         })
+
+    }
+    
+    private func attemptReloadOfTable()
+    {
+        self.timer?.invalidate()
+        self.timer = Timer.scheduledTimer (withTimeInterval: 0.5, repeats: false, block:
+        {
+            (Timer) in
+            self.messages = Array (self.messageDictionary.values)
+            self.messages.sort(by:
+                {
+                    (m1,m2)->Bool in
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
+                    
+                    let a = dateFormatter.date(from: m1.time!)!
+                    let b = dateFormatter.date(from: m2.time!)!
+                    
+                    return a > b
+            })
+            DispatchQueue.main.async(execute: {self.tableView.reloadData()})
+                
+        })
+    }
+    
+    private func handleReloadTable()
+    {
+        
     }
 }
 
