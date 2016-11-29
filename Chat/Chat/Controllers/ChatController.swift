@@ -70,6 +70,11 @@ class ChatController: UICollectionViewController, UITextFieldDelegate, UICollect
             })
         })
     }
+    
+    func uploadImageToFirebase(image: UIImage)
+    {
+        
+    }
 
 }
 
@@ -142,7 +147,7 @@ extension ChatController
 
 
 //Actions
-extension ChatController
+extension ChatController: UIImagePickerControllerDelegate, UINavigationControllerDelegate
 {
     func handleSend()
     {
@@ -176,7 +181,29 @@ extension ChatController
             receiverUserMessageRer.updateChildValues([messageRef: 1])
             
         })
+    }
+    
+    func handleUploadTap()
+    {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.allowsEditing = true
+        imagePickerController.delegate = self
+        self.present(imagePickerController, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
+    {
+        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage
+        {
+            uploadImageToFirebase(image: editedImage)
+        }
         
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController)
+    {
+        dismiss(animated: true, completion: nil)
     }
 }
 
@@ -197,6 +224,18 @@ extension ChatController
         containerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         containerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
+        //ImageView
+        let uploadImage = UIImageView()
+        uploadImage.isUserInteractionEnabled = true
+        uploadImage.image = UIImage(named: "newImage")
+        uploadImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleUploadTap)))
+        containerView.addSubview(uploadImage)
+        uploadImage.translatesAutoresizingMaskIntoConstraints = false
+        uploadImage.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 4).isActive = true
+        uploadImage.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        uploadImage.widthAnchor.constraint(equalToConstant: 44).isActive = true
+        uploadImage.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        
         //Button
         let sendButton = UIButton(type: .system)
         sendButton.setTitle("Send", for: .normal)
@@ -210,7 +249,7 @@ extension ChatController
         
         //Text
         containerView.addSubview(inputTextField)
-        inputTextField.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 8).isActive = true
+        inputTextField.leftAnchor.constraint(equalTo: uploadImage.rightAnchor, constant: 4).isActive = true
         inputTextField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
         inputTextField.rightAnchor.constraint(equalTo: sendButton.leftAnchor).isActive = true
         inputTextField.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
@@ -247,7 +286,7 @@ extension ChatController
     {
         let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
         containerViewBottomAnchor?.constant = -keyboardSize!.height
-        
+        print(111111)
         let keyboardDirection = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey]
         UIView.animate(withDuration: keyboardDirection as! TimeInterval)
         {
