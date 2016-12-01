@@ -30,19 +30,88 @@ class ChatController: UICollectionViewController, UITextFieldDelegate, UICollect
         text.placeholder = "Enter message ..."
         text.translatesAutoresizingMaskIntoConstraints = false
         text.delegate = self
+        text.returnKeyType = .done
         return text
     }()
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 58, right: 0)
-        collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
+        collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
         collectionView?.alwaysBounceVertical = true
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
-        setupInputArea()
-        setupKeyboard()
+        
+        hideKeyboardOnTap()
+    }
+    
+    lazy var inputContainerView: UIView =
+    {
+        let containerView = UIView()
+        containerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50)
+        containerView.backgroundColor = UIColor.white
+        
+        //AddImageButton
+        let uploadImage = UIImageView()
+        uploadImage.isUserInteractionEnabled = true
+        uploadImage.image = UIImage(named: "newImage")
+        uploadImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleUploadTap)))
+        containerView.addSubview(uploadImage)
+        uploadImage.translatesAutoresizingMaskIntoConstraints = false
+        uploadImage.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 4).isActive = true
+        uploadImage.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        uploadImage.widthAnchor.constraint(equalToConstant: 44).isActive = true
+        uploadImage.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        
+        //Button
+        let sendButton = UIButton(type: .system)
+        sendButton.setTitle("Send", for: .normal)
+        sendButton.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(sendButton)
+        sendButton.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
+        sendButton.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
+        sendButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        sendButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        sendButton.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
+        
+        //Text
+        containerView.addSubview(self.inputTextField)
+        self.inputTextField.leftAnchor.constraint(equalTo: uploadImage.rightAnchor, constant: 4).isActive = true
+        self.inputTextField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        self.inputTextField.rightAnchor.constraint(equalTo: sendButton.leftAnchor).isActive = true
+        self.inputTextField.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
+        
+        //SeparatorLine
+        let separatorLine = UIView()
+        separatorLine.backgroundColor = UIColor(200,200,200)
+        separatorLine.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(separatorLine)
+        separatorLine.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 10).isActive = true
+        separatorLine.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
+        separatorLine.widthAnchor.constraint(equalTo: containerView.widthAnchor, constant: -20).isActive = true
+        separatorLine.heightAnchor.constraint(equalToConstant: 1).isActive = true
+
+        
+        return containerView
+    }()
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
+    {
+        inputTextField.resignFirstResponder()
+        return true
+    }
+    
+    override var inputAccessoryView: UIView?
+    {
+        get
+        {
+            return inputContainerView
+        }
+    }
+    
+    override var canBecomeFirstResponder: Bool
+    {
+        return true
     }
     
     func downloadMessages()
@@ -208,107 +277,18 @@ extension ChatController: UIImagePickerControllerDelegate, UINavigationControlle
 }
 
 
-//View
-extension ChatController
-{
-    func setupInputArea()
-    {
-        //Container
-        let containerView = UIView()
-        containerView.backgroundColor = UIColor.white
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(containerView)
-        containerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        containerViewBottomAnchor = containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        containerViewBottomAnchor?.isActive = true
-        containerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        containerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        //ImageView
-        let uploadImage = UIImageView()
-        uploadImage.isUserInteractionEnabled = true
-        uploadImage.image = UIImage(named: "newImage")
-        uploadImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleUploadTap)))
-        containerView.addSubview(uploadImage)
-        uploadImage.translatesAutoresizingMaskIntoConstraints = false
-        uploadImage.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 4).isActive = true
-        uploadImage.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        uploadImage.widthAnchor.constraint(equalToConstant: 44).isActive = true
-        uploadImage.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        
-        //Button
-        let sendButton = UIButton(type: .system)
-        sendButton.setTitle("Send", for: .normal)
-        sendButton.translatesAutoresizingMaskIntoConstraints = false
-        containerView.addSubview(sendButton)
-        sendButton.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
-        sendButton.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
-        sendButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        sendButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        sendButton.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
-        
-        //Text
-        containerView.addSubview(inputTextField)
-        inputTextField.leftAnchor.constraint(equalTo: uploadImage.rightAnchor, constant: 4).isActive = true
-        inputTextField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        inputTextField.rightAnchor.constraint(equalTo: sendButton.leftAnchor).isActive = true
-        inputTextField.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
-        
-        //SeparatorLine
-        let separatorLine = UIView()
-        separatorLine.backgroundColor = UIColor(200,200,200)
-        separatorLine.translatesAutoresizingMaskIntoConstraints = false
-        containerView.addSubview(separatorLine)
-        separatorLine.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 10).isActive = true
-        separatorLine.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
-        separatorLine.widthAnchor.constraint(equalTo: containerView.widthAnchor, constant: -20).isActive = true
-        separatorLine.heightAnchor.constraint(equalToConstant: 1).isActive = true
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool
-    {
-        handleSend()
-        return true
-    }
-}
-
 //Keyboard
 extension ChatController
 {
-    func setupKeyboard()
+    func hideKeyboardOnTap()
     {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: .UIKeyboardWillHide, object: nil)
-        hideKeyboardWhenTappedAround()
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboardofInputTextField))
+        view.addGestureRecognizer(tap)
     }
     
-    func keyboardWillShow(notification: NSNotification)
+    func dismissKeyboardofInputTextField()
     {
-        let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
-        containerViewBottomAnchor?.constant = -keyboardSize!.height
-        print(111111)
-        let keyboardDirection = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey]
-        UIView.animate(withDuration: keyboardDirection as! TimeInterval)
-        {
-            self.view.layoutIfNeeded()
-        }
-    }
-    
-    func keyboardWillHide(notification: NSNotification)
-    {
-        containerViewBottomAnchor?.constant = 0
-        
-        let keyboardDirection = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey]
-        UIView.animate(withDuration: keyboardDirection as! TimeInterval)
-        {
-            self.view.layoutIfNeeded()
-        }
-    }
-    
-    override func viewDidDisappear(_ animated: Bool)
-    {
-        super.viewDidDisappear(animated)
-        NotificationCenter.default.removeObserver(self)
+        inputTextField.resignFirstResponder()
     }
 }
 
