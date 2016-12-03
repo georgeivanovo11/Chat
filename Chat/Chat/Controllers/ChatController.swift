@@ -139,12 +139,6 @@ class ChatController: UICollectionViewController, UITextFieldDelegate, UICollect
             })
         })
     }
-    
-    func uploadImageToFirebase(image: UIImage)
-    {
-        
-    }
-
 }
 
 //Collection view
@@ -179,17 +173,29 @@ extension ChatController
     {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell
         let message = messages[indexPath.row]
-        cell.textView.text = message.text
         
-        setupCell(cell: cell, message: message)
-        
-        cell.bubbleWidthAnchor?.constant = estimateFrameForText(text: message.text!).width + 32
+        if message.imageUrl == nil
+        {
+            cell.textView.isHidden = false
+            cell.textView.text = message.text
+            setupCell(cell: cell, message: message)
+            cell.messageImageView.isHidden = true
+            cell.bubbleWidthAnchor?.constant = estimateFrameForText(text: message.text!).width + 32
+        }
+        else
+        {
+            cell.textView.isHidden = true
+            cell.messageImageView.loadImageUsingCacheWithUrlString(urlString: message.imageUrl!)
+            cell.messageImageView.isHidden = false
+            setupCell(cell: cell, message: message)
+            cell.bubbleWidthAnchor?.constant = estimateFrameForText(text: message.text!).width + 32
+        }
         
         return cell
     }
     
     private func setupCell(cell: ChatMessageCell, message: Message)
-    {
+    {        
         if let profileImageUrl = self.user?.imageURL
         {
             cell.profileImageView.loadImageUsingCacheWithUrlString(urlString: profileImageUrl)
@@ -268,6 +274,63 @@ extension ChatController: UIImagePickerControllerDelegate, UINavigationControlle
         }
         
         dismiss(animated: true, completion: nil)
+    }
+    
+    func uploadImageToFirebase(image: UIImage)
+    {
+        let imageName = NSUUID().uuidString
+        let ref = FIRStorage.storage().reference().child("message-images").child(imageName)
+        if let uploadData = UIImageJPEGRepresentation(image,0.2)
+        {
+            ref.put(uploadData, metadata: nil, completion:
+            {
+                (metadata, error) in
+                
+                if error != nil
+                {
+                    print(error)
+                    return
+                }
+                
+                if let imageUrl = metadata?.downloadURL()?.absoluteString
+                {
+                    self.sendMessageWithImage(imageUrl: imageUrl)
+                }
+            })
+        }
+    }
+    
+    func sendMessageWithImage(imageUrl: String)
+    {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
+        
+        let ref = FIRDatabase.database().reference().child("messages")
+        let childRef = ref.childByAutoId()
+        let receiver = user!.id!
+        let sender = FIRAuth.auth()!.currentUser!.uid
+        let time: String = dateFormatter.string(from: Date())
+        let values = ["text": "Image", "imageUrl": imageUrl, "receiver": receiver, "sender": sender, "time": time]
+        
+        childRef.updateChildValues(values, withCompletionBlock:
+            {
+                (error, ref) in
+                if error != nil
+                {
+                    print (error)
+                    return
+                }
+                
+                self.inputTextField.text = nil
+                
+                let userMessagesRef = FIRDatabase.database().reference().child("user-messages").child(sender).child(receiver)
+                let messageRef = childRef.key
+                userMessagesRef.updateChildValues([messageRef: 1])
+                
+                let receiverUserMessageRer = FIRDatabase.database().reference().child("user-messages").child(receiver).child(sender)
+                receiverUserMessageRer.updateChildValues([messageRef: 1])
+                
+        })
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController)

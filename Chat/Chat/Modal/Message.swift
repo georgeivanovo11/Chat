@@ -16,6 +16,8 @@ class Message: NSObject
     var text: String?
     var time: String?
     
+    var imageUrl: String?
+    
     func partnerId() -> String?
     {
         if sender == FIRAuth.auth()?.currentUser?.uid

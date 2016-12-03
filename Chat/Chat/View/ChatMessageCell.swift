@@ -16,7 +16,6 @@ class ChatMessageCell: UICollectionViewCell
     let textView: UITextView =
     {
         let tv = UITextView()
-        tv.text = "example"
         tv.font = UIFont.systemFont(ofSize: 16)
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.backgroundColor = UIColor.clear
@@ -37,7 +36,15 @@ class ChatMessageCell: UICollectionViewCell
     let profileImageView: UIImageView =
     {
         let im = UIImageView()
-        im.image = UIImage(named: "logo")
+        im.layer.cornerRadius = 16
+        im.layer.masksToBounds = true
+        im.translatesAutoresizingMaskIntoConstraints = false
+        return im
+    }()
+    
+    let messageImageView: UIImageView =
+    {
+        let im = UIImageView()
         im.layer.cornerRadius = 16
         im.layer.masksToBounds = true
         im.translatesAutoresizingMaskIntoConstraints = false
@@ -55,6 +62,8 @@ class ChatMessageCell: UICollectionViewCell
         addSubview(textView)
         addSubview(profileImageView)
         
+        bubbleView.addSubview(messageImageView)
+        
         //position of bubbleView
         bubbleViewRightAnchor = bubbleView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8)
         bubbleViewRightAnchor?.isActive = true
@@ -65,6 +74,11 @@ class ChatMessageCell: UICollectionViewCell
         bubbleWidthAnchor = bubbleView.widthAnchor.constraint(equalToConstant: 200)
         bubbleWidthAnchor?.isActive = true
         
+        //position of messageImageView
+        messageImageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor).isActive = true
+        messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor).isActive = true
+        messageImageView.widthAnchor.constraint(equalTo: bubbleView.widthAnchor).isActive = true
+        messageImageView.heightAnchor.constraint(equalTo: bubbleView.heightAnchor).isActive = true
         
         //position of textView
         textView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor).isActive = true
