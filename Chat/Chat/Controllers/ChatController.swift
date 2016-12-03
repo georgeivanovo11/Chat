@@ -42,7 +42,7 @@ class ChatController: UICollectionViewController, UITextFieldDelegate, UICollect
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
         
-        hideKeyboardOnTap()
+        keyboardSettings()
     }
     
     lazy var inputContainerView: UIView =
@@ -68,7 +68,7 @@ class ChatController: UICollectionViewController, UITextFieldDelegate, UICollect
         sendButton.setTitle("Send", for: .normal)
         sendButton.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(sendButton)
-        sendButton.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
+        sendButton.addTarget(self, action: #selector(sendText), for: .touchUpInside)
         sendButton.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
         sendButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
         sendButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
@@ -134,7 +134,13 @@ class ChatController: UICollectionViewController, UITextFieldDelegate, UICollect
                 
                 let message = Message(dictionary: dictionary)
                 self.messages.append(message)
-                DispatchQueue.main.async(execute: {self.collectionView?.reloadData()})
+                DispatchQueue.main.async(execute:
+                {
+                    self.collectionView?.reloadData()
+                    //scroll to the last index
+                    let index = IndexPath(item: self.messages.count-1, section: 0)
+                    self.collectionView?.scrollToItem(at: index, at: .bottom, animated: true)
+                })
             })
         })
     }
@@ -233,7 +239,21 @@ extension ChatController
 //Actions
 extension ChatController: UIImagePickerControllerDelegate, UINavigationControllerDelegate
 {
-    func handleSend()
+    func sendText()
+    {
+        let properties = ["text": inputTextField.text!]
+        
+        sendMessageWithProperties(properties: properties)
+    }
+    
+    func sendImage(imageUrl: String, image: UIImage)
+    {
+        let properties = ["text": "Image", "imageUrl": imageUrl, "imageWidth": image.size.width, "imageHeight": image.size.height] as [String : Any]
+        
+        sendMessageWithProperties(properties: properties)
+    }
+    
+    private func sendMessageWithProperties(properties: [String: Any])
     {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
@@ -243,28 +263,30 @@ extension ChatController: UIImagePickerControllerDelegate, UINavigationControlle
         let receiver = user!.id!
         let sender = FIRAuth.auth()!.currentUser!.uid
         let time: String = dateFormatter.string(from: Date())
-        let values = ["text": inputTextField.text!, "receiver": receiver, "sender": sender, "time": time]
-        //childRef.updateChildValues(values)
+        
+        var values = ["sender": sender, "receiver": receiver, "time": time] as [String : Any]
+        properties.forEach({values[$0] = $1})
         
         childRef.updateChildValues(values, withCompletionBlock:
-        {
-            (error, ref) in
-            if error != nil
             {
-                print (error)
-                return
-            }
-            
-            self.inputTextField.text = nil
-            
-            let userMessagesRef = FIRDatabase.database().reference().child("user-messages").child(sender).child(receiver)
-            let messageRef = childRef.key
-            userMessagesRef.updateChildValues([messageRef: 1])
-            
-            let receiverUserMessageRer = FIRDatabase.database().reference().child("user-messages").child(receiver).child(sender)
-            receiverUserMessageRer.updateChildValues([messageRef: 1])
-            
+                (error, ref) in
+                if error != nil
+                {
+                    print (error)
+                    return
+                }
+                
+                self.inputTextField.text = nil
+                
+                let userMessagesRef = FIRDatabase.database().reference().child("user-messages").child(sender).child(receiver)
+                let messageRef = childRef.key
+                userMessagesRef.updateChildValues([messageRef: 1])
+                
+                let receiverUserMessageRer = FIRDatabase.database().reference().child("user-messages").child(receiver).child(sender)
+                receiverUserMessageRer.updateChildValues([messageRef: 1])
+                
         })
+
     }
     
     func handleUploadTap()
@@ -311,43 +333,10 @@ extension ChatController: UIImagePickerControllerDelegate, UINavigationControlle
                 
                 if let imageUrl = metadata?.downloadURL()?.absoluteString
                 {
-                    self.sendMessageWithImage(imageUrl: imageUrl, image: image)
+                    self.sendImage(imageUrl: imageUrl, image: image)
                 }
             })
         }
-    }
-    
-    func sendMessageWithImage(imageUrl: String, image: UIImage)
-    {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
-        
-        let ref = FIRDatabase.database().reference().child("messages")
-        let childRef = ref.childByAutoId()
-        let receiver = user!.id!
-        let sender = FIRAuth.auth()!.currentUser!.uid
-        let time: String = dateFormatter.string(from: Date())
-        let values = ["text": "Image", "imageUrl": imageUrl, "imageWidth": image.size.width, "imageHeight": image.size.height, "receiver": receiver, "sender": sender, "time": time] as [String : Any]
-        
-        childRef.updateChildValues(values, withCompletionBlock:
-            {
-                (error, ref) in
-                if error != nil
-                {
-                    print (error)
-                    return
-                }
-                
-                self.inputTextField.text = nil
-                
-                let userMessagesRef = FIRDatabase.database().reference().child("user-messages").child(sender).child(receiver)
-                let messageRef = childRef.key
-                userMessagesRef.updateChildValues([messageRef: 1])
-                
-                let receiverUserMessageRer = FIRDatabase.database().reference().child("user-messages").child(receiver).child(sender)
-                receiverUserMessageRer.updateChildValues([messageRef: 1])
-                
-        })
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController)
@@ -360,15 +349,26 @@ extension ChatController: UIImagePickerControllerDelegate, UINavigationControlle
 //Keyboard
 extension ChatController
 {
-    func hideKeyboardOnTap()
+    func keyboardSettings()
     {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboardofInputTextField))
         view.addGestureRecognizer(tap)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboard2), name: .UIKeyboardDidShow, object: nil)
     }
     
     func dismissKeyboardofInputTextField()
     {
         inputTextField.resignFirstResponder()
+    }
+    
+    func handleKeyboard2()
+    {
+        if messages.count > 0
+        {
+            let index = IndexPath(item: self.messages.count-1, section: 0)
+            self.collectionView?.scrollToItem(at: index, at: .top, animated: true)
+        }
     }
 }
 
