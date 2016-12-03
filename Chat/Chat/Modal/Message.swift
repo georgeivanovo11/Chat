@@ -17,6 +17,21 @@ class Message: NSObject
     var time: String?
     
     var imageUrl: String?
+    var imageWidth: NSNumber?
+    var imageHeight: NSNumber?
+    
+    init (dictionary: [String: AnyObject])
+    {
+        super.init()
+        sender = dictionary["sender"] as? String
+        receiver = dictionary["receiver"] as? String
+        time = dictionary["time"] as? String
+        text = dictionary["text"] as? String
+        
+        imageUrl = dictionary["imageUrl"] as? String
+        imageWidth = dictionary["imageWidth"] as? NSNumber
+        imageHeight = dictionary["imageHeight"] as? NSNumber
+    }
     
     func partnerId() -> String?
     {

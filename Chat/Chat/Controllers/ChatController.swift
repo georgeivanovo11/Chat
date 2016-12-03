@@ -132,8 +132,7 @@ class ChatController: UICollectionViewController, UITextFieldDelegate, UICollect
                 guard let dictionary = snapshot.value as? [String: AnyObject]
                 else {return}
                 
-                let message = Message()
-                message.setValuesForKeys(dictionary)
+                let message = Message(dictionary: dictionary)
                 self.messages.append(message)
                 DispatchQueue.main.async(execute: {self.collectionView?.reloadData()})
             })
@@ -154,9 +153,19 @@ extension ChatController
     {
         var height: CGFloat = 80
         
-        if let text = messages[indexPath.row].text
+        let message = messages[indexPath.item]
+        
+        if message.imageUrl == nil
         {
-            height = estimateFrameForText(text: text).height + 20
+            let text = message.text
+            height = estimateFrameForText(text: text!).height + 20
+        }
+        else
+        {
+            if let imageWidth = message.imageWidth?.floatValue, let imageHeight = message.imageHeight?.floatValue
+            {
+                height = CGFloat(imageHeight / imageWidth * 200)
+            }
         }
         
         return CGSize(width: view.frame.width, height: height)
@@ -188,7 +197,7 @@ extension ChatController
             cell.messageImageView.loadImageUsingCacheWithUrlString(urlString: message.imageUrl!)
             cell.messageImageView.isHidden = false
             setupCell(cell: cell, message: message)
-            cell.bubbleWidthAnchor?.constant = estimateFrameForText(text: message.text!).width + 32
+            cell.bubbleWidthAnchor?.constant = 200
         }
         
         return cell
@@ -268,10 +277,18 @@ extension ChatController: UIImagePickerControllerDelegate, UINavigationControlle
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
     {
+        var selectedImage = UIImage()
+        
         if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage
         {
-            uploadImageToFirebase(image: editedImage)
+            selectedImage = editedImage
         }
+        else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage
+        {
+            selectedImage = originalImage
+        }
+        
+        uploadImageToFirebase(image: selectedImage)
         
         dismiss(animated: true, completion: nil)
     }
@@ -294,13 +311,13 @@ extension ChatController: UIImagePickerControllerDelegate, UINavigationControlle
                 
                 if let imageUrl = metadata?.downloadURL()?.absoluteString
                 {
-                    self.sendMessageWithImage(imageUrl: imageUrl)
+                    self.sendMessageWithImage(imageUrl: imageUrl, image: image)
                 }
             })
         }
     }
     
-    func sendMessageWithImage(imageUrl: String)
+    func sendMessageWithImage(imageUrl: String, image: UIImage)
     {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
@@ -310,7 +327,7 @@ extension ChatController: UIImagePickerControllerDelegate, UINavigationControlle
         let receiver = user!.id!
         let sender = FIRAuth.auth()!.currentUser!.uid
         let time: String = dateFormatter.string(from: Date())
-        let values = ["text": "Image", "imageUrl": imageUrl, "receiver": receiver, "sender": sender, "time": time]
+        let values = ["text": "Image", "imageUrl": imageUrl, "imageWidth": image.size.width, "imageHeight": image.size.height, "receiver": receiver, "sender": sender, "time": time] as [String : Any]
         
         childRef.updateChildValues(values, withCompletionBlock:
             {
