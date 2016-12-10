@@ -12,8 +12,9 @@ class ChatMessageCell: UICollectionViewCell
 {
     static let currentUserColor = UIColor(0, 137, 249)
     static let partnerUserColor = UIColor(240, 240, 240)
+    public var motherController: ChatController? = nil
     
-    let textView: UITextView =
+    lazy var textView: UITextView =
     {
         let tv = UITextView()
         tv.font = UIFont.systemFont(ofSize: 16)
@@ -21,6 +22,9 @@ class ChatMessageCell: UICollectionViewCell
         tv.backgroundColor = UIColor.clear
         tv.textColor = UIColor.white
         tv.isEditable = false
+        tv.isSelectable = false
+        tv.isUserInteractionEnabled = true
+        tv.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleRender)))
         return tv
     }()
     
@@ -96,5 +100,12 @@ class ChatMessageCell: UICollectionViewCell
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func handleRender(tap: UITapGestureRecognizer)
+    {
+        let newController = RenderController(collectionViewLayout: UICollectionViewFlowLayout())
+        newController.text = self.textView.text
+        motherController?.navigationController?.pushViewController(newController, animated: true)
     }
 }

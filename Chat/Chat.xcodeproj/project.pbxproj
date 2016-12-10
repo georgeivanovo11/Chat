@@ -12,6 +12,7 @@
 		5E3F96BF1DE717D000B64F0C /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3F96BE1DE717D000B64F0C /* UserCell.swift */; };
 		5E43B3DF1DD783AD00F26F17 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E43B3DE1DD783AD00F26F17 /* Extensions.swift */; };
 		5E545E481DE0763A00E9CFA5 /* ChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E545E471DE0763A00E9CFA5 /* ChatController.swift */; };
+		5E55C0E61DFC7F3A006ADA04 /* RenderController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E55C0E51DFC7F3A006ADA04 /* RenderController.swift */; };
 		5E6A09751DCBD0E3008019A5 /* PeopleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E6A09741DCBD0E3008019A5 /* PeopleController.swift */; };
 		5E6A09771DCBD75E008019A5 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E6A09761DCBD75E008019A5 /* User.swift */; };
 		5EA40C581DC3DFDC0034D03A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA40C571DC3DFDC0034D03A /* AppDelegate.swift */; };
@@ -30,6 +31,7 @@
 		5E3F96BE1DE717D000B64F0C /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserCell.swift; path = View/UserCell.swift; sourceTree = "<group>"; };
 		5E43B3DE1DD783AD00F26F17 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Extensions.swift; path = Helpers/Extensions.swift; sourceTree = "<group>"; };
 		5E545E471DE0763A00E9CFA5 /* ChatController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatController.swift; path = Controllers/ChatController.swift; sourceTree = "<group>"; };
+		5E55C0E51DFC7F3A006ADA04 /* RenderController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RenderController.swift; path = Controllers/RenderController.swift; sourceTree = "<group>"; };
 		5E6A09741DCBD0E3008019A5 /* PeopleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PeopleController.swift; path = Controllers/PeopleController.swift; sourceTree = "<group>"; };
 		5E6A09761DCBD75E008019A5 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Modal/User.swift; sourceTree = "<group>"; };
 		5E6A09791DCBDEC7008019A5 /* Chat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Chat.entitlements; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 				5EA40C6C1DC3E32F0034D03A /* DialogsController.swift */,
 				5E6A09741DCBD0E3008019A5 /* PeopleController.swift */,
 				5E545E471DE0763A00E9CFA5 /* ChatController.swift */,
+				5E55C0E51DFC7F3A006ADA04 /* RenderController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -275,6 +278,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5EA40C581DC3DFDC0034D03A /* AppDelegate.swift in Sources */,
+				5E55C0E61DFC7F3A006ADA04 /* RenderController.swift in Sources */,
 				5E43B3DF1DD783AD00F26F17 /* Extensions.swift in Sources */,
 				5E545E481DE0763A00E9CFA5 /* ChatController.swift in Sources */,
 				5ED0B97A1DE76F47009F844C /* MyDate.swift in Sources */,

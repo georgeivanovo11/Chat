@@ -214,7 +214,8 @@ extension ChatController
     }
     
     private func setupCell(cell: ChatMessageCell, message: Message)
-    {        
+    {
+        cell.motherController = self
         if let profileImageUrl = self.user?.imageURL
         {
             cell.profileImageView.loadImageUsingCacheWithUrlString(urlString: profileImageUrl)
