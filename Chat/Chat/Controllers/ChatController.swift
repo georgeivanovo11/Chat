@@ -138,8 +138,12 @@ class ChatController: UICollectionViewController, UITextFieldDelegate, UICollect
                 {
                     self.collectionView?.reloadData()
                     //scroll to the last index
-                    let index = IndexPath(item: self.messages.count-1, section: 0)
-                    self.collectionView?.scrollToItem(at: index, at: .bottom, animated: true)
+                    let number = self.messages.count-1
+                    if number > 1
+                    {
+                        let index = IndexPath(item: number, section: 0)
+                        self.collectionView?.scrollToItem(at: index, at: .bottom, animated: true)
+                    }
                 })
             })
         })
@@ -364,7 +368,7 @@ extension ChatController
     
     func handleKeyboard2()
     {
-        if messages.count > 0
+        if messages.count > 1
         {
             let index = IndexPath(item: self.messages.count-1, section: 0)
             self.collectionView?.scrollToItem(at: index, at: .top, animated: true)
