@@ -7,10 +7,12 @@
 //
 
 import UIKit
+import Firebase
 
 class RenderController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout
 {
     public var message: Message? = nil
+    var memory = [Segment]()
     var outputViewBottomAnchor: NSLayoutConstraint?
     
     override func viewDidLoad()
@@ -22,8 +24,10 @@ class RenderController: UICollectionViewController, UITextFieldDelegate, UIColle
         collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 8, right: 0)
         collectionView?.alwaysBounceVertical = true
 
+        downloadMemory()
         setupOutputContainerView()
         keyboardSettings()
+                
     }
     
     lazy var inputTextField: UITextField =
@@ -47,7 +51,7 @@ class RenderController: UICollectionViewController, UITextFieldDelegate, UIColle
             sendButton.setTitle("Save", for: .normal)
             sendButton.translatesAutoresizingMaskIntoConstraints = false
             containerView.addSubview(sendButton)
-            //sendButton.addTarget(self, action: #selector(sendText), for: .touchUpInside)
+            sendButton.addTarget(self, action: #selector(saveSegment), for: .touchUpInside)
             sendButton.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
             sendButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
             sendButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
@@ -169,15 +173,56 @@ class RenderController: UICollectionViewController, UITextFieldDelegate, UIColle
     }
 }
 
+//Action
+extension RenderController
+{
+    func saveSegment()
+    {
+        guard let text = inputTextField.text, let author = FIRAuth.auth()?.currentUser?.uid
+        else
+        {
+            return
+        }
+        
+        let ref = FIRDatabase.database().reference().child("translation-memory")
+        let childRef = ref.childByAutoId()
+        
+        let eng: String = (message?.text)!
+        let rus: String = text
+        let isCorrect: String = "true"
+        
+        let values = ["eng": eng, "rus": rus, "author": author, "isCorrect": isCorrect] as [String : Any]
+        
+        childRef.updateChildValues(values)
+        
+        inputTextField.text = nil
+        print ("ok")
+    }
+    
+    func downloadMemory()
+    {
+        let currentUserRer = FIRDatabase.database().reference().child("translation-memory")
+        
+        currentUserRer.observe(.childAdded, with:
+            {
+                (snapshot) in
+                guard let dictionary = snapshot.value as? [String: AnyObject]
+                    else {return}
+                
+                let segment = Segment(dictionary: dictionary)
+                self.memory.append(segment)
+                DispatchQueue.main.async(execute:
+                {
+                        self.collectionView?.reloadData()
+                })
+            })
+    }
+}
+
+
 //Stuff
 extension RenderController
 {
-    func estimateFrameForText(text: String) -> CGRect
-    {
-        let size = CGSize(width: 200, height: 1000)
-        let option = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-        return NSString(string: text).boundingRect(with: size, options: option, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 16)], context: nil)
-    }
     
     func rectForText(text: String, font: UIFont, maxSize: CGSize) -> CGSize
     {
