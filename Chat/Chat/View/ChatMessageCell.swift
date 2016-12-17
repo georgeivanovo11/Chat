@@ -13,6 +13,7 @@ class ChatMessageCell: UICollectionViewCell
     static let currentUserColor = UIColor(0, 137, 249)
     static let partnerUserColor = UIColor(240, 240, 240)
     public var motherController: ChatController? = nil
+    public var message: Message? = nil
     
     lazy var textView: UITextView =
     {
@@ -105,7 +106,7 @@ class ChatMessageCell: UICollectionViewCell
     func handleRender(tap: UITapGestureRecognizer)
     {
         let newController = RenderController(collectionViewLayout: UICollectionViewFlowLayout())
-        newController.text = self.textView.text
+        newController.message = self.message
         motherController?.navigationController?.pushViewController(newController, animated: true)
     }
 }
