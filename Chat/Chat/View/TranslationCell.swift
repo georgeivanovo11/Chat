@@ -9,8 +9,19 @@ import UIKit
 
 class TranslationCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout
 {
-    let message: Message? = nil
+    public var message: Message? = nil
+    
+    public var memory = [Segment]()
+    {
+        didSet
+        {
+            DispatchQueue.main.async(execute:
+                {self.collection.reloadData()})
+        }
+    }
+    
     let cellId3 = "cellId3"
+    
     
     override init(frame: CGRect)
     {
@@ -51,13 +62,15 @@ class TranslationCell: UICollectionViewCell, UICollectionViewDataSource, UIColle
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
     {
-        return 5
+        return memory.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId3, for: indexPath) as! CellOfCell
         cell.setupView()
+        cell.originTextField.text = memory[indexPath.row].eng
+        cell.renderTextField.text = memory[indexPath.row].rus
         return cell
     }
     

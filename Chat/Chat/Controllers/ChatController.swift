@@ -247,9 +247,11 @@ extension ChatController: UIImagePickerControllerDelegate, UINavigationControlle
 {
     func sendText()
     {
-        let properties = ["text": inputTextField.text!]
-        
-        sendMessageWithProperties(properties: properties)
+        if(inputTextField.text! != "" && !inputTextField.text!.hasPrefix(" "))
+        {
+            let properties = ["text": inputTextField.text!]
+            sendMessageWithProperties(properties: properties)
+        }
     }
     
     func sendImage(imageUrl: String, image: UIImage)

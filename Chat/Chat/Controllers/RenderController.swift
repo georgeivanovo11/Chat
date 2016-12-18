@@ -114,25 +114,27 @@ extension RenderController
 {
     func saveSegment()
     {
-        guard let text = inputTextField.text, let author = FIRAuth.auth()?.currentUser?.uid
-        else
+        if(inputTextField.text! != "" && !inputTextField.text!.hasPrefix(" "))
         {
-            return
+            guard let text = inputTextField.text, let author = FIRAuth.auth()?.currentUser?.uid
+            else
+            {
+                return
+            }
+        
+            let ref = FIRDatabase.database().reference().child("translation-memory")
+            let childRef = ref.childByAutoId()
+        
+            let eng: String = (message?.text)!
+            let rus: String = text
+            let isCorrect: String = "true"
+        
+            let values = ["eng": eng, "rus": rus, "author": author, "isCorrect": isCorrect] as [String : Any]
+        
+            childRef.updateChildValues(values)
+        
+            inputTextField.text = nil
         }
-        
-        let ref = FIRDatabase.database().reference().child("translation-memory")
-        let childRef = ref.childByAutoId()
-        
-        let eng: String = (message?.text)!
-        let rus: String = text
-        let isCorrect: String = "true"
-        
-        let values = ["eng": eng, "rus": rus, "author": author, "isCorrect": isCorrect] as [String : Any]
-        
-        childRef.updateChildValues(values)
-        
-        inputTextField.text = nil
-        print ("ok")
     }
     
     func downloadMemory()
@@ -146,7 +148,12 @@ extension RenderController
                     else {return}
                 
                 let segment = Segment(dictionary: dictionary)
-                self.memory.append(segment)
+                
+                if segment.eng == self.message?.text
+                {
+                    self.memory.append(segment)
+                }
+                
                 DispatchQueue.main.async(execute:
                 {
                         self.collectionView?.reloadData()
@@ -175,6 +182,7 @@ extension RenderController
         else
         {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId2, for: indexPath) as! TranslationCell
+            cell.memory = memory
             return cell
         }
     }

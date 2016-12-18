@@ -12,6 +12,7 @@ class CellOfCell: UICollectionViewCell
 {
     static let currentUserColor = UIColor(0, 137, 249)
     static let color2 = UIColor(240, 240, 240)
+    public var segment: Segment?
     
     override init(frame: CGRect)
     {
@@ -44,6 +45,18 @@ class CellOfCell: UICollectionViewCell
         view2.rightAnchor.constraint(equalTo: bubbleView.rightAnchor, constant: -5).isActive = true
         view2.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 60).isActive = true
         view2.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -5).isActive = true
+        
+        bubbleView.addSubview(originTextField)
+        originTextField.widthAnchor.constraint(equalToConstant: 190).isActive = true
+        originTextField.centerXAnchor.constraint(equalTo: bubbleView.centerXAnchor).isActive = true
+        originTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        originTextField.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 5).isActive = true
+        
+        bubbleView.addSubview(renderTextField)
+        renderTextField.widthAnchor.constraint(equalToConstant: 190).isActive = true
+        renderTextField.centerXAnchor.constraint(equalTo: view2.centerXAnchor).isActive = true
+        renderTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        renderTextField.topAnchor.constraint(equalTo: view2.topAnchor, constant: 5).isActive = true
     }
     
     let bubbleView: UIView =
@@ -77,6 +90,37 @@ class CellOfCell: UICollectionViewCell
             text.backgroundColor = UIColor.clear
             text.textColor = UIColor.black
             text.text = "100%"
+            text.textAlignment = .center
+            text.isScrollEnabled = false
+            return text
+    }()
+    
+    lazy var originTextField : UITextView =
+        {
+            let text = UITextView()
+            text.isUserInteractionEnabled = true
+            text.isEditable = false
+            text.isSelectable = false
+            text.font = UIFont.systemFont(ofSize: 16)
+            text.translatesAutoresizingMaskIntoConstraints = false
+            text.backgroundColor = UIColor.clear
+            text.textColor = UIColor.white
+            text.text = "Hello"
+            text.textAlignment = .center
+            return text
+    }()
+    
+    lazy var renderTextField : UITextView =
+        {
+            let text = UITextView()
+            text.isUserInteractionEnabled = true
+            text.isEditable = false
+            text.isSelectable = false
+            text.font = UIFont.systemFont(ofSize: 16)
+            text.translatesAutoresizingMaskIntoConstraints = false
+            text.backgroundColor = UIColor.clear
+            text.textColor = UIColor.black
+            text.text = "Привет"
             text.textAlignment = .center
             return text
     }()
