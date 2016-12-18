@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		0C9BD95E1EB66BCEEF1D78CE /* Pods_Chat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA43A6D67A64877E417437E /* Pods_Chat.framework */; };
 		5E23A2141DE24BAC0093243E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E23A2131DE24BAC0093243E /* Message.swift */; };
-		5E26A7F81E068A6400DF2F95 /* RenderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E26A7F71E068A6400DF2F95 /* RenderCell.swift */; };
+		5E26A7F81E068A6400DF2F95 /* CellOfCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E26A7F71E068A6400DF2F95 /* CellOfCell.swift */; };
 		5E26A7FA1E06A37400DF2F95 /* OriginMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E26A7F91E06A37400DF2F95 /* OriginMessageCell.swift */; };
 		5E26A7FC1E06A98E00DF2F95 /* TranslationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E26A7FB1E06A98E00DF2F95 /* TranslationCell.swift */; };
 		5E3F96BF1DE717D000B64F0C /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3F96BE1DE717D000B64F0C /* UserCell.swift */; };
@@ -32,7 +32,7 @@
 		1CCC78C3AF378A19870C26B1 /* Pods-Chat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Chat/Pods-Chat.debug.xcconfig"; sourceTree = "<group>"; };
 		5DD12BBDADE017340AE00D1E /* Pods-Chat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chat.release.xcconfig"; path = "Pods/Target Support Files/Pods-Chat/Pods-Chat.release.xcconfig"; sourceTree = "<group>"; };
 		5E23A2131DE24BAC0093243E /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Message.swift; path = Modal/Message.swift; sourceTree = "<group>"; };
-		5E26A7F71E068A6400DF2F95 /* RenderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RenderCell.swift; path = View/RenderCell.swift; sourceTree = "<group>"; };
+		5E26A7F71E068A6400DF2F95 /* CellOfCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CellOfCell.swift; path = View/CellOfCell.swift; sourceTree = "<group>"; };
 		5E26A7F91E06A37400DF2F95 /* OriginMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OriginMessageCell.swift; path = View/OriginMessageCell.swift; sourceTree = "<group>"; };
 		5E26A7FB1E06A98E00DF2F95 /* TranslationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TranslationCell.swift; path = View/TranslationCell.swift; sourceTree = "<group>"; };
 		5E3F96BE1DE717D000B64F0C /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserCell.swift; path = View/UserCell.swift; sourceTree = "<group>"; };
@@ -72,7 +72,7 @@
 			children = (
 				5E3F96BE1DE717D000B64F0C /* UserCell.swift */,
 				5EE06CA61DE8CF5C009AFDE9 /* ChatMessageCell.swift */,
-				5E26A7F71E068A6400DF2F95 /* RenderCell.swift */,
+				5E26A7F71E068A6400DF2F95 /* CellOfCell.swift */,
 				5E26A7F91E06A37400DF2F95 /* OriginMessageCell.swift */,
 				5E26A7FB1E06A98E00DF2F95 /* TranslationCell.swift */,
 			);
@@ -294,7 +294,7 @@
 				5E55C0E61DFC7F3A006ADA04 /* RenderController.swift in Sources */,
 				5E43B3DF1DD783AD00F26F17 /* Extensions.swift in Sources */,
 				5E545E481DE0763A00E9CFA5 /* ChatController.swift in Sources */,
-				5E26A7F81E068A6400DF2F95 /* RenderCell.swift in Sources */,
+				5E26A7F81E068A6400DF2F95 /* CellOfCell.swift in Sources */,
 				5ED0B97A1DE76F47009F844C /* MyDate.swift in Sources */,
 				5EA40C6D1DC3E32F0034D03A /* DialogsController.swift in Sources */,
 				5E6A09751DCBD0E3008019A5 /* PeopleController.swift in Sources */,
