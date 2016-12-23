@@ -26,8 +26,6 @@ class TranslationCell: UICollectionViewCell, UICollectionViewDataSource, UIColle
     override init(frame: CGRect)
     {
         super.init(frame: frame)
-        setupView()
-        
     }
     required init?(coder aDecoder: NSCoder)
     {
@@ -69,8 +67,16 @@ class TranslationCell: UICollectionViewCell, UICollectionViewDataSource, UIColle
     {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId3, for: indexPath) as! CellOfCell
         cell.setupView()
-        cell.originTextField.text = memory[indexPath.row].eng
-        cell.renderTextField.text = memory[indexPath.row].rus
+        if(isEnglish(str: (message?.text)!) == true)
+        {
+            cell.originTextField.text = memory[indexPath.row].eng
+            cell.renderTextField.text = memory[indexPath.row].rus
+        }
+        else
+        {
+            cell.originTextField.text = memory[indexPath.row].rus
+            cell.renderTextField.text = memory[indexPath.row].eng
+        }
         return cell
     }
     
@@ -80,3 +86,19 @@ class TranslationCell: UICollectionViewCell, UICollectionViewDataSource, UIColle
     }
 }
 
+extension TranslationCell
+{
+    func isEnglish(str: String) -> Bool
+    {
+        var str1 = str.lowercased()
+        let mas: [Character] = ["a","b","c","d","e","f","g","h","i","j","k","l","m","o","p","q","r","s","t","u","v","w","x","y","z"]
+        
+        for a: Character in mas
+        {
+            if str1.hasPrefix((String) (a) )
+            {
+                return true
+            }
+        }
+        return false
+    }}

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Foundation
 import Firebase
 
 class RenderController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout
@@ -33,7 +34,7 @@ class RenderController: UICollectionViewController, UITextFieldDelegate, UIColle
         downloadMemory()
         //setupOutputContainerView()
         keyboardSettings()
-                
+        
     }
     
     lazy var inputTextField: UITextField =
@@ -125,8 +126,20 @@ extension RenderController
             let ref = FIRDatabase.database().reference().child("translation-memory")
             let childRef = ref.childByAutoId()
         
-            let eng: String = (message?.text)!
-            let rus: String = text
+            var eng: String
+            var rus: String
+            
+            if isEnglish(str: (message?.text)!) == true
+            {
+                eng = (message?.text)!
+                rus = text
+            }
+            else
+            {
+                eng = (message?.text)!
+                rus = text
+            }
+            
             let isCorrect: String = "true"
         
             let values = ["eng": eng, "rus": rus, "author": author, "isCorrect": isCorrect] as [String : Any]
@@ -141,6 +154,8 @@ extension RenderController
     {
         let currentUserRer = FIRDatabase.database().reference().child("translation-memory")
         
+        if (isEnglish(str: (message?.text)!) == true)
+        {
         currentUserRer.observe(.childAdded, with:
             {
                 (snapshot) in
@@ -159,6 +174,28 @@ extension RenderController
                         self.collectionView?.reloadData()
                 })
             })
+        }
+        else
+        {
+            currentUserRer.observe(.childAdded, with:
+                {
+                    (snapshot) in
+                    guard let dictionary = snapshot.value as? [String: AnyObject]
+                        else {return}
+                    
+                    let segment = Segment(dictionary: dictionary)
+                    
+                    if segment.rus == self.message?.text
+                    {
+                        self.memory.append(segment)
+                    }
+                    
+                    DispatchQueue.main.async(execute:
+                        {
+                            self.collectionView?.reloadData()
+                    })
+            })
+        }
     }
 }
 
@@ -183,6 +220,8 @@ extension RenderController
         {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId2, for: indexPath) as! TranslationCell
             cell.memory = memory
+            cell.message = message
+            cell.setupView()
             return cell
         }
     }
@@ -204,6 +243,56 @@ extension RenderController
         let size = CGSize(width: rect.size.width, height: rect.size.height)
         return size
     }
+    
+    func isEnglish(str: String) -> Bool
+    {
+        let str1 = str.lowercased()
+        let mas: [Character] = ["a","b","c","d","e","f","g","h","i","j","k","l","m","o","p","q","r","s","t","u","v","w","x","y","z"]
+        
+        for a: Character in mas
+        {
+            if str1.hasPrefix((String) (a) )
+                {
+                    return true
+                }
+        }
+        return false
+    }
+    
+    func similarity (str1: String, str2: String) ->Double
+    {
+        let str11 = str1.lowercased()
+        let str22 = str2.lowercased()
+        
+        let mas1 = str11.components(separatedBy: [" ", "!", ".", "?", ","])
+        let mas2 = str22.components(separatedBy: [" ", "!", ".", "?", ","])
+        
+        var delitel = 1
+        if mas1.count > mas2.count
+        {
+            delitel = mas1.count
+        }
+        else
+        {
+            delitel = mas2.count
+        }
+        
+        var sum = 0
+        
+        for a in mas1
+        {
+            for b in mas2
+            {
+                if a == b
+                {
+                    sum += 1
+                }
+            }
+        }
+        
+        return (Double) (sum) / (Double) (delitel) * 100
+    }
+    
 }
 
 //Keyboard
