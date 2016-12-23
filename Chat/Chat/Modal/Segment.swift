@@ -14,8 +14,9 @@ class Segment: NSObject
     var eng: String?
     var author: String?
     var isCorrect: String?
+    var rate: Double?
     
-    init (dictionary: [String: AnyObject])
+    init (dictionary: [String: AnyObject], similarity: Double)
     {
         super.init()
         
@@ -23,5 +24,6 @@ class Segment: NSObject
         eng = dictionary["eng"] as? String
         author = dictionary["author"] as? String
         isCorrect = dictionary["isCorrect"] as? String
+        rate = similarity
     }
 }

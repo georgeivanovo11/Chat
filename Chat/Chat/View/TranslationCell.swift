@@ -39,7 +39,7 @@ class TranslationCell: UICollectionViewCell, UICollectionViewDataSource, UIColle
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.backgroundColor = UIColor.white
         cv.translatesAutoresizingMaskIntoConstraints = false
-        
+        cv.alwaysBounceHorizontal = true
         return cv
     }()
     
@@ -77,6 +77,7 @@ class TranslationCell: UICollectionViewCell, UICollectionViewDataSource, UIColle
             cell.originTextField.text = memory[indexPath.row].rus
             cell.renderTextField.text = memory[indexPath.row].eng
         }
+        cell.rateTextField.text = (String) (describing: (Int) (memory[indexPath.row].rate!)) + "%"
         return cell
     }
     

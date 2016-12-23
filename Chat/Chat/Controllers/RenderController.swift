@@ -35,6 +35,7 @@ class RenderController: UICollectionViewController, UITextFieldDelegate, UIColle
         //setupOutputContainerView()
         keyboardSettings()
         
+        print(similarity(str1: "What a nice day!", str2: "How are you?"))
     }
     
     lazy var inputTextField: UITextField =
@@ -162,9 +163,11 @@ extension RenderController
                 guard let dictionary = snapshot.value as? [String: AnyObject]
                     else {return}
                 
-                let segment = Segment(dictionary: dictionary)
+                let a = dictionary["eng"]
+                let b = self.message?.text
+                let segment = Segment(dictionary: dictionary, similarity: self.similarity(str1: a as! String, str2: b!))
                 
-                if segment.eng == self.message?.text
+                if segment.rate! > 10.0
                 {
                     self.memory.append(segment)
                 }
@@ -183,9 +186,11 @@ extension RenderController
                     guard let dictionary = snapshot.value as? [String: AnyObject]
                         else {return}
                     
-                    let segment = Segment(dictionary: dictionary)
+                    let a = dictionary["rus"]
+                    let b = self.message?.text
+                    let segment = Segment(dictionary: dictionary, similarity: self.similarity(str1: a as! String, str2: b!))
                     
-                    if segment.rus == self.message?.text
+                    if segment.rate! > 10.0
                     {
                         self.memory.append(segment)
                     }
@@ -264,8 +269,36 @@ extension RenderController
         let str11 = str1.lowercased()
         let str22 = str2.lowercased()
         
-        let mas1 = str11.components(separatedBy: [" ", "!", ".", "?", ","])
-        let mas2 = str22.components(separatedBy: [" ", "!", ".", "?", ","])
+        var mas1 = str11.components(separatedBy: [" ", "!", ".", "?", ","])
+        var mas2 = str22.components(separatedBy: [" ", "!", ".", "?", ","])
+        
+        var count1 = mas1.count
+        var i = 0
+        
+        while i < count1
+        {
+            if mas1[i] == " " || mas1[i] == ""
+            {
+                mas1.remove(at: i)
+                i -= 1
+                count1 -= 1
+            }
+            i += 1
+        }
+        
+        var count2 = mas2.count
+        i = 0
+        
+        while i < count2
+        {
+            if mas2[i] == " " || mas2[i] == ""
+            {
+                mas2.remove(at: i)
+                i -= 1
+                count2 -= 1
+            }
+            i += 1
+        }
         
         var delitel = 1
         if mas1.count > mas2.count
@@ -289,6 +322,9 @@ extension RenderController
                 }
             }
         }
+        
+        print(delitel)
+        print(sum)
         
         return (Double) (sum) / (Double) (delitel) * 100
     }
