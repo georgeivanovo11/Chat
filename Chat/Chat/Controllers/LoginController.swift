@@ -99,7 +99,7 @@ class LoginController: UIViewController
     
     lazy var segmentedControl: UISegmentedControl =
     {
-            let sc = UISegmentedControl(items: ["Login","Check-in"])
+            let sc = UISegmentedControl(items: ["Log-in","Sign-up"])
             sc.translatesAutoresizingMaskIntoConstraints = false
             sc.tintColor = UIColor.white
             sc.selectedSegmentIndex = 1
@@ -252,7 +252,7 @@ extension LoginController
             profileImageView.isUserInteractionEnabled = false
             profileImageView.image = UIImage(named: "logo")
             profileImageViewWidthAnchor?.isActive = false
-            profileImageViewWidthAnchor = profileImageView.widthAnchor.constraint(equalToConstant: 250)
+            profileImageViewWidthAnchor = profileImageView.widthAnchor.constraint(equalToConstant: 270)
             profileImageViewWidthAnchor?.isActive = true
         }
         else
@@ -389,7 +389,7 @@ extension LoginController
     {
         profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         profileImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 35).isActive = true
-        profileImageViewWidthAnchor = profileImageView.widthAnchor.constraint(equalToConstant: 250)
+        profileImageViewWidthAnchor = profileImageView.widthAnchor.constraint(equalToConstant: 270)
         profileImageViewWidthAnchor?.isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 159).isActive = true
     }
