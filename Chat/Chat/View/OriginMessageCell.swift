@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class OriginMessageCell: UICollectionViewCell
 {
@@ -115,6 +116,38 @@ class OriginMessageCell: UICollectionViewCell
             
             return button
     } ()
+    
+    lazy var sendButton: UIButton =
+        {
+            let button = UIButton(type: .system)
+            button.backgroundColor = UIColor.clear
+            button.setTitle("Send", for: .normal)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.layer.cornerRadius = 10
+            button.layer.masksToBounds = true
+            button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+            
+            //Actions:
+            button.addTarget(self, action: #selector(toClear), for: .touchUpInside)
+            
+            return button
+    } ()
+    
+    lazy var saveButton: UIButton =
+        {
+            let button = UIButton(type: .system)
+            button.backgroundColor = UIColor.clear
+            button.setTitle("Save", for: .normal)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.layer.cornerRadius = 10
+            button.layer.masksToBounds = true
+            button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+            
+            //Actions:
+            button.addTarget(self, action: #selector(toSave), for: .touchUpInside)
+            
+            return button
+    } ()
 }
 
 extension OriginMessageCell
@@ -181,6 +214,18 @@ extension OriginMessageCell
         clearButton.leftAnchor.constraint(equalTo: bubble2.rightAnchor, constant: 8).isActive = true
         clearButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
+        self.addSubview(sendButton)
+        sendButton.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: -60).isActive = true
+        sendButton.widthAnchor.constraint(equalToConstant: 50) .isActive = true
+        sendButton.topAnchor.constraint(equalTo: bubble2.bottomAnchor, constant: 15).isActive = true
+        sendButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        self.addSubview(saveButton)
+        saveButton.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: 60).isActive = true
+        saveButton.widthAnchor.constraint(equalToConstant: 50) .isActive = true
+        saveButton.topAnchor.constraint(equalTo: bubble2.bottomAnchor, constant: 15).isActive = true
+        saveButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
         let separatorLine = UIView()
         separatorLine.backgroundColor = UIColor(200,200,200)
         separatorLine.translatesAutoresizingMaskIntoConstraints = false
@@ -198,11 +243,6 @@ extension OriginMessageCell
         
     }
     
-    func toClear()
-    {
-        inputTextField.text = ""
-    }
-    
     //Stuff
     
         func rectForText(text: String, font: UIFont, maxSize: CGSize) -> CGSize
@@ -213,6 +253,49 @@ extension OriginMessageCell
             return size
         }
     
+}
+
+extension OriginMessageCell
+{
+    func toClear()
+    {
+        inputTextField.text = ""
+    }
+    
+    func toSave()
+    {
+        if(inputTextField.text! != "" && !inputTextField.text!.hasPrefix(" "))
+        {
+            guard let text = inputTextField.text, let author = FIRAuth.auth()?.currentUser?.uid
+                else
+            {
+                return
+            }
+            
+            let ref = FIRDatabase.database().reference().child("translation-memory")
+            let childRef = ref.childByAutoId()
+            
+            var eng: String
+            var rus: String
+            
+            if isEnglish(str: (message1?.text)!) == true
+            {
+                eng = (message1?.text)!
+                rus = text
+            }
+            else
+            {
+                eng = text
+                rus = (message1?.text)!
+            }
+            
+            let isCorrect: String = "true"
+            
+            let values = ["eng": eng, "rus": rus, "author": author, "isCorrect": isCorrect] as [String : Any]
+            
+            childRef.updateChildValues(values)
+        }
+    }
 }
 
 extension OriginMessageCell
@@ -230,4 +313,18 @@ extension OriginMessageCell
             inputTextField.resignFirstResponder()
         }
 
+    func isEnglish(str: String) -> Bool
+    {
+        let str1 = str.lowercased()
+        let mas: [Character] = ["a","b","c","d","e","f","g","h","i","j","k","l","m","o","p","q","r","s","t","u","v","w","x","y","z"]
+        
+        for a: Character in mas
+        {
+            if str1.hasPrefix((String) (a) )
+            {
+                return true
+            }
+        }
+        return false
+    }
 }
