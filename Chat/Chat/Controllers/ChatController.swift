@@ -14,6 +14,7 @@ class ChatController: UICollectionViewController, UITextFieldDelegate, UICollect
     let cellId = "cellId"
     var messages = [Message]()
     var containerViewBottomAnchor: NSLayoutConstraint?
+    var currentMessage : Message? = nil
     
     var user: User?
     {
@@ -30,6 +31,7 @@ class ChatController: UICollectionViewController, UITextFieldDelegate, UICollect
         text.placeholder = "Enter message ..."
         text.translatesAutoresizingMaskIntoConstraints = false
         text.delegate = self
+        text.backgroundColor = UIColor(245,245,245)
         text.returnKeyType = .done
         return text
     }()
@@ -49,21 +51,21 @@ class ChatController: UICollectionViewController, UITextFieldDelegate, UICollect
     {
         let containerView = UIView()
         containerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50)
-        containerView.backgroundColor = UIColor.white
+        containerView.backgroundColor = UIColor(200,200,200)
         
-        //AddImageButton
-        let uploadImage = UIImageView()
-        uploadImage.isUserInteractionEnabled = true
-        uploadImage.image = UIImage(named: "newImage")
-        uploadImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleUploadTap)))
-        containerView.addSubview(uploadImage)
-        uploadImage.translatesAutoresizingMaskIntoConstraints = false
-        uploadImage.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 4).isActive = true
-        uploadImage.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        uploadImage.widthAnchor.constraint(equalToConstant: 44).isActive = true
-        uploadImage.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        //imageButton
+        let imageButton = UIButton(type: .system)
+        imageButton.setTitle("+", for: .normal)
+        imageButton.translatesAutoresizingMaskIntoConstraints = false
+        imageButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 24)
+        containerView.addSubview(imageButton)
+        imageButton.addTarget(self, action: #selector(handleUploadTap), for: .touchUpInside)
+        imageButton.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 4).isActive = true
+        imageButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor, constant: -2).isActive = true
+        imageButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        imageButton.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
         
-        //Button
+        //sendButton
         let sendButton = UIButton(type: .system)
         sendButton.setTitle("Send", for: .normal)
         sendButton.translatesAutoresizingMaskIntoConstraints = false
@@ -71,26 +73,41 @@ class ChatController: UICollectionViewController, UITextFieldDelegate, UICollect
         sendButton.addTarget(self, action: #selector(sendText), for: .touchUpInside)
         sendButton.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
         sendButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        sendButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        sendButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
         sendButton.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
         
-        //Text
-        containerView.addSubview(self.inputTextField)
-        self.inputTextField.leftAnchor.constraint(equalTo: uploadImage.rightAnchor, constant: 4).isActive = true
-        self.inputTextField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        self.inputTextField.rightAnchor.constraint(equalTo: sendButton.leftAnchor).isActive = true
-        self.inputTextField.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
+        let centerContainer = UIView()
+        centerContainer.backgroundColor = UIColor(245,245,245)
+        centerContainer.translatesAutoresizingMaskIntoConstraints = false
+        centerContainer.layer.cornerRadius = 10
+        centerContainer.layer.masksToBounds = true
+        containerView.addSubview(centerContainer)
+        centerContainer.leftAnchor.constraint(equalTo: imageButton.rightAnchor, constant: 4).isActive = true
+        centerContainer.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        centerContainer.rightAnchor.constraint(equalTo: sendButton.leftAnchor).isActive = true
+        centerContainer.heightAnchor.constraint(equalTo: containerView.heightAnchor, constant: -16).isActive = true
         
-        //SeparatorLine
-        let separatorLine = UIView()
-        separatorLine.backgroundColor = UIColor(200,200,200)
-        separatorLine.translatesAutoresizingMaskIntoConstraints = false
-        containerView.addSubview(separatorLine)
-        separatorLine.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 10).isActive = true
-        separatorLine.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
-        separatorLine.widthAnchor.constraint(equalTo: containerView.widthAnchor, constant: -20).isActive = true
-        separatorLine.heightAnchor.constraint(equalToConstant: 1).isActive = true
-
+        
+        
+        centerContainer.addSubview(self.inputTextField)
+        self.inputTextField.leftAnchor.constraint(equalTo: centerContainer.leftAnchor, constant: 4).isActive = true
+        self.inputTextField.centerYAnchor.constraint(equalTo: centerContainer.centerYAnchor).isActive = true
+        self.inputTextField.rightAnchor.constraint(equalTo: centerContainer.rightAnchor, constant: -24).isActive = true
+        self.inputTextField.heightAnchor.constraint(equalTo: centerContainer.heightAnchor).isActive = true
+        
+        //renderButton
+        let renderButton = UIButton(type: .system)
+        renderButton.backgroundColor = UIColor(245,245,245)
+        renderButton.layer.cornerRadius = 10
+        renderButton.layer.masksToBounds = true
+        renderButton.setTitle("R", for: .normal)
+        renderButton.translatesAutoresizingMaskIntoConstraints = false
+        centerContainer.addSubview(renderButton)
+        renderButton.addTarget(self, action: #selector(toRender), for: .touchUpInside)
+        renderButton.rightAnchor.constraint(equalTo: centerContainer.rightAnchor, constant: -4).isActive = true
+        renderButton.centerYAnchor.constraint(equalTo: centerContainer.centerYAnchor).isActive = true
+        renderButton.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        renderButton.heightAnchor.constraint(equalTo: centerContainer.heightAnchor).isActive = true
         
         return containerView
     }()
@@ -350,6 +367,23 @@ extension ChatController: UIImagePickerControllerDelegate, UINavigationControlle
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController)
     {
         dismiss(animated: true, completion: nil)
+    }
+    
+    func toRender()
+    {
+        if(inputTextField.text! != "" && !inputTextField.text!.hasPrefix(" "))
+        {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
+            let receiver = user!.id!
+            let sender = FIRAuth.auth()!.currentUser!.uid
+            let time: String = dateFormatter.string(from: Date())
+        
+            let message2 = Message (dictionary: ["text": inputTextField.text!,"sender": sender, "receiver": receiver, "time": time] as [String : Any] as [String : AnyObject])
+            let newController = RenderController(collectionViewLayout: UICollectionViewFlowLayout())
+            newController.message = message2
+            self.navigationController?.pushViewController(newController, animated: true)
+        }
     }
 }
 
