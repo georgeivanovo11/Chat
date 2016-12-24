@@ -28,6 +28,7 @@ class RenderController: UICollectionViewController, UITextFieldDelegate, UIColle
         
         collectionView?.alwaysBounceVertical = false
         collectionView?.alwaysBounceHorizontal = false
+        collectionView?.isScrollEnabled = false
         collectionView?.register(OriginMessageCell.self, forCellWithReuseIdentifier: cellId1)
         collectionView?.register(TranslationCell.self, forCellWithReuseIdentifier: cellId2)
         
@@ -91,7 +92,7 @@ class RenderController: UICollectionViewController, UITextFieldDelegate, UIColle
     
 
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool
+    /*func textFieldShouldReturn(_ textField: UITextField) -> Bool
     {
         inputTextField.resignFirstResponder()
         return true
@@ -108,7 +109,7 @@ class RenderController: UICollectionViewController, UITextFieldDelegate, UIColle
     override var canBecomeFirstResponder: Bool
     {
         return true
-    }
+    }*/
 }
 
 //Action
@@ -172,6 +173,12 @@ extension RenderController
                     self.memory.append(segment)
                 }
                 
+                self.memory.sort(by:
+                {
+                        (m1, m2) -> Bool in
+                        return m1.rate! > m2.rate!
+                })
+                
                 DispatchQueue.main.async(execute:
                 {
                         self.collectionView?.reloadData()
@@ -194,6 +201,12 @@ extension RenderController
                     {
                         self.memory.append(segment)
                     }
+                    
+                    self.memory.sort(by:
+                        {
+                            (m1, m2) -> Bool in
+                            return m1.rate! > m2.rate!
+                    })
                     
                     DispatchQueue.main.async(execute:
                         {
@@ -233,7 +246,14 @@ extension RenderController
     
     @objc(collectionView:layout:sizeForItemAtIndexPath:) func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {
-        return CGSize(width: view.frame.width, height: 150)
+        if indexPath.row == 0
+        {
+            return CGSize(width: view.frame.width, height: 340)
+        }
+        else
+        {
+            return CGSize(width: view.frame.width, height: 150)
+        }
     }
 }
 
