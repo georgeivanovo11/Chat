@@ -17,6 +17,7 @@ class RenderController: UICollectionViewController, UITextFieldDelegate, UIColle
     var outputViewBottomAnchor: NSLayoutConstraint?
     let cellId1 = "cellId1"
     let cellId2 = "cellId2"
+    public var linkToChatController: ChatController? = nil
     
     override func viewDidLoad()
     {
@@ -155,6 +156,8 @@ extension RenderController
         if indexPath.row == 0
         {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId1, for: indexPath) as! OriginMessageCell
+            cell.motherController = self
+            cell.linkToChatController = linkToChatController
             cell.message1 = message
             cell.setupView()
             return cell

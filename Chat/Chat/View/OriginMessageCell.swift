@@ -12,6 +12,8 @@ import Firebase
 class OriginMessageCell: UICollectionViewCell
 {
     public var message1: Message? = nil
+    public var motherController: RenderController? = nil
+    public var linkToChatController: ChatController? = nil
     
     override init(frame: CGRect)
     {
@@ -128,7 +130,7 @@ class OriginMessageCell: UICollectionViewCell
             button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
             
             //Actions:
-            button.addTarget(self, action: #selector(toClear), for: .touchUpInside)
+            button.addTarget(self, action: #selector(toSend), for: .touchUpInside)
             
             return button
     } ()
@@ -297,7 +299,14 @@ extension OriginMessageCell
         }
     }
     
-
+    func toSend()
+    {
+        if(inputTextField.text! != "" && !inputTextField.text!.hasPrefix(" "))
+        {
+            linkToChatController?.inputTextField.text = inputTextField.text
+            motherController?.navigationController?.popViewController(animated: true)
+        }
+    }
 }
 
 extension OriginMessageCell

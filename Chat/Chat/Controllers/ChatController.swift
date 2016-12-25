@@ -381,6 +381,7 @@ extension ChatController: UIImagePickerControllerDelegate, UINavigationControlle
         
             let message2 = Message (dictionary: ["text": inputTextField.text!,"sender": sender, "receiver": receiver, "time": time] as [String : Any] as [String : AnyObject])
             let newController = RenderController(collectionViewLayout: UICollectionViewFlowLayout())
+            newController.linkToChatController = self
             newController.message = message2
             self.navigationController?.pushViewController(newController, animated: true)
         }
