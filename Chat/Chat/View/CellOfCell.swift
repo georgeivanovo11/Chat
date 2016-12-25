@@ -13,6 +13,7 @@ class CellOfCell: UICollectionViewCell
     static let currentUserColor = UIColor(0, 137, 249)
     static let color2 = UIColor(240, 240, 240)
     public var segment: Segment?
+    public var motherController: RenderController? = nil
     
     override init(frame: CGRect)
     {
@@ -122,6 +123,13 @@ class CellOfCell: UICollectionViewCell
             text.textColor = UIColor.black
             text.text = "Привет"
             text.textAlignment = .center
+            text.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(toPress)))
             return text
     }()
+    
+    func toPress()
+    {
+        let cell = motherController?.collectionView?.cellForItem(at: IndexPath(item: 0, section: 0)) as! OriginMessageCell
+        cell.inputTextField.text = renderTextField.text
+    }
 }

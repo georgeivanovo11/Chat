@@ -165,6 +165,7 @@ extension RenderController
         else
         {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId2, for: indexPath) as! TranslationCell
+            cell.motherController = self
             cell.memory = memory
             cell.message = message
             cell.setupView()

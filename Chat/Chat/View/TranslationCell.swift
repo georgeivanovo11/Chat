@@ -10,6 +10,7 @@ import UIKit
 class TranslationCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout
 {
     public var message: Message? = nil
+    public var motherController: RenderController? = nil
     
     public var memory = [Segment]()
     {
@@ -77,6 +78,7 @@ class TranslationCell: UICollectionViewCell, UICollectionViewDataSource, UIColle
             cell.originTextField.text = memory[indexPath.row].rus
             cell.renderTextField.text = memory[indexPath.row].eng
         }
+        cell.motherController = self.motherController
         cell.rateTextField.text = (String) (describing: (Int) (memory[indexPath.row].rate!)) + "%"
         return cell
     }
@@ -85,6 +87,7 @@ class TranslationCell: UICollectionViewCell, UICollectionViewDataSource, UIColle
     {
         return CGSize(width:200, height: frame.height)
     }
+    
 }
 
 extension TranslationCell
